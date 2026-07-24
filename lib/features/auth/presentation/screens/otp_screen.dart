@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/navigation/app_router.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/app_log.dart';
 import '../providers/auth_providers.dart';
 
 /// Saisie du code OTP reçu par SMS.
@@ -36,17 +37,20 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
 
     setState(() => _submitting = true);
     try {
+      AppLog.info('UI: validation OTP');
       await ref.read(authControllerProvider.notifier).verifyOtp(code);
       if (!mounted) return;
       _showMessage('Connexion réussie.');
       context.go(AppRoutes.home);
-    } on FirebaseAuthException catch (e) {
+    } on FirebaseAuthException catch (e, st) {
+      AppLog.error('UI OTP verify FirebaseAuthException', e, st);
       _showMessage(
         e.code == 'invalid-verification-code'
             ? 'Code incorrect. Réessaie.'
-            : (e.message ?? 'Échec de vérification.'),
+            : 'Auth [${e.code}] ${e.message ?? ''}',
       );
-    } catch (e) {
+    } catch (e, st) {
+      AppLog.error('UI OTP verify erreur', e, st);
       _showMessage(e.toString());
     } finally {
       if (mounted) setState(() => _submitting = false);

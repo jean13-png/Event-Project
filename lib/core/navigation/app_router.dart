@@ -16,6 +16,7 @@ import '../../features/profile/presentation/screens/profile_screen.dart';
 import '../../features/tickets/presentation/screens/tickets_screen.dart';
 import '../../features/wallet/presentation/screens/wallet_screen.dart';
 import '../../features/wallet/presentation/screens/withdraw_screen.dart';
+import 'app_route_observer.dart';
 import 'main_shell.dart';
 
 abstract final class AppRoutes {
@@ -35,6 +36,7 @@ abstract final class AppRoutes {
 
 final GoRouter appRouter = GoRouter(
   initialLocation: AppRoutes.home,
+  observers: [AppRouteObserver()],
   routes: [
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) {

@@ -3,13 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import '../../../../core/navigation/app_router.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/app_log.dart';
 import '../../../../core/widgets/design_system.dart';
 import '../providers/auth_providers.dart';
 
-/// Connexion OTP SMS — responsabilité Jean.
+/// Connexion OTP SMS / Google — responsabilité Jean.
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
@@ -34,6 +36,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       return;
     }
 
+    AppLog.info('UI: bouton OTP pressé → $phone');
     setState(() => _submitting = true);
     try {
       final alreadySignedIn =
@@ -45,16 +48,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       } else {
         context.push(AppRoutes.otp);
       }
-    } on FirebaseAuthException catch (e) {
-      _showMessage(_mapAuthError(e));
-    } catch (e) {
-      _showMessage('Impossible d’envoyer le SMS. Réessaie.');
+    } catch (e, st) {
+      AppLog.error('UI OTP erreur', e, st);
+      _showMessage(_formatError(e));
     } finally {
       if (mounted) setState(() => _submitting = false);
     }
   }
 
   Future<void> _signInWithGoogle() async {
+    AppLog.info('UI: bouton Google pressé');
     setState(() => _submitting = true);
     try {
       final signedIn =
@@ -63,38 +66,63 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       if (signedIn) {
         _showMessage('Connexion Google réussie.');
         context.go(AppRoutes.home);
+      } else {
+        AppLog.info('UI: Google annulé');
       }
-    } on FirebaseAuthException catch (e) {
-      _showMessage(_mapAuthError(e));
-    } catch (e) {
-      _showMessage('Connexion Google impossible. Réessaie.');
+    } catch (e, st) {
+      AppLog.error('UI Google erreur', e, st);
+      _showMessage(_formatError(e));
     } finally {
       if (mounted) setState(() => _submitting = false);
     }
   }
 
+  String _formatError(Object e) {
+    if (e is FirebaseAuthException) {
+      return _mapAuthError(e);
+    }
+    if (e is GoogleSignInException) {
+      return 'Google (${e.code.name}): ${e.description ?? e.toString()}';
+    }
+    final text = e.toString();
+    if (text.length > 160) {
+      return '${text.substring(0, 160)}…';
+    }
+    return text;
+  }
+
   String _mapAuthError(FirebaseAuthException e) {
     switch (e.code) {
       case 'invalid-phone-number':
-        return 'Numéro invalide. Utilise le format +229…';
+        return 'Numéro invalide. Utilise +229…';
       case 'too-many-requests':
         return 'Trop de tentatives. Réessaie plus tard.';
       case 'quota-exceeded':
         return 'Quota SMS dépassé. Utilise un numéro de test Firebase.';
       case 'missing-client-identifier':
-        return 'SHA manquant dans Firebase (ajoute SHA-1 / SHA-256).';
+      case 'app-not-authorized':
+        return 'SHA / package incorrect dans Firebase (SHA-1/256).';
       case 'account-exists-with-different-credential':
         return 'Ce compte existe déjà avec une autre méthode.';
       case 'missing-id-token':
         return 'Config Google incomplète (serverClientId / SHA).';
+      case 'network-request-failed':
+        return 'Réseau indisponible. Vérifie ta connexion.';
+      case 'captcha-check-failed':
+      case 'web-context-cancelled':
+        return 'Vérification reCAPTCHA échouée / annulée.';
       default:
-        return e.message ?? 'Erreur d’authentification (${e.code}).';
+        return 'Auth [${e.code}] ${e.message ?? ''}'.trim();
     }
   }
 
   void _showMessage(String message) {
+    AppLog.info('UI snackbar: $message');
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
+      SnackBar(
+        content: Text(message),
+        duration: const Duration(seconds: 6),
+      ),
     );
   }
 
