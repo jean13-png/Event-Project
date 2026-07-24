@@ -1,2 +1,31 @@
-~$*
-.~lock.*
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.env
+.env.local
+.idea
+.vscode
+*.iml
+
+# Flutter
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+build/
+*.iml
+*.ipr
+*.iws
+
+# Firebase
+firebase-debug.log
+firebase.json
+.firebaserc
+
+# OS
+Thumbs.db

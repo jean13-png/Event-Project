@@ -1,0 +1,52 @@
+name: eventbj
+description: "Application événementielle du Bénin — Flutter + Firebase"
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  flutter_riverpod: ^3.3.2
+  go_router: ^17.3.0
+  firebase_core: ^4.12.1
+  cloud_firestore: ^6.7.1
+  firebase_storage: ^13.4.5
+  firebase_auth: ^6.5.6
+  firebase_messaging: ^16.4.3
+  mobile_scanner: ^7.4.0
+  google_maps_flutter: ^2.7.0
+  image_picker: ^1.1.2
+  intl: ^0.20.3
+  google_fonts: ^8.2.0
+  shared_preferences: ^2.3.3
+  geolocator: ^14.0.3
+  permission_handler: ^12.0.3
+  csv: ^8.0.0
+  fl_chart: ^1.2.0
+  share_plus: ^13.3.0
+  cached_network_image: ^3.4.1
+  shimmer: ^3.0.0
+  url_launcher: ^6.3.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+  # TODO: ajouter les assets (police Inter, images) après configuration
+  fonts:
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Inter-SemiBold.ttf
+          weight: 600
+  assets:
+    - assets/fonts/
+    - assets/images/
