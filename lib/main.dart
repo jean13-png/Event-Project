@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 
 import 'app.dart';
 import 'core/firebase/firebase_options.dart';
+import 'core/services/auth_service.dart';
 import 'core/theme/app_colors.dart';
 
 Future<void> main() async {
@@ -21,6 +22,7 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await AuthService.initializeGoogleSignIn();
 
   runApp(const EventBjRoot());
 }

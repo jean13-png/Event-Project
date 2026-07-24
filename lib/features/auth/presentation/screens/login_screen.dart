@@ -53,6 +53,25 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     }
   }
 
+  Future<void> _signInWithGoogle() async {
+    setState(() => _submitting = true);
+    try {
+      final signedIn =
+          await ref.read(authControllerProvider.notifier).signInWithGoogle();
+      if (!mounted) return;
+      if (signedIn) {
+        _showMessage('Connexion Google réussie.');
+        context.go(AppRoutes.home);
+      }
+    } on FirebaseAuthException catch (e) {
+      _showMessage(_mapAuthError(e));
+    } catch (e) {
+      _showMessage('Connexion Google impossible. Réessaie.');
+    } finally {
+      if (mounted) setState(() => _submitting = false);
+    }
+  }
+
   String _mapAuthError(FirebaseAuthException e) {
     switch (e.code) {
       case 'invalid-phone-number':
@@ -63,6 +82,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         return 'Quota SMS dépassé. Utilise un numéro de test Firebase.';
       case 'missing-client-identifier':
         return 'SHA manquant dans Firebase (ajoute SHA-1 / SHA-256).';
+      case 'account-exists-with-different-credential':
+        return 'Ce compte existe déjà avec une autre méthode.';
+      case 'missing-id-token':
+        return 'Config Google incomplète (serverClientId / SHA).';
       default:
         return e.message ?? 'Erreur d’authentification (${e.code}).';
     }
@@ -127,13 +150,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             ),
             const SizedBox(height: 12),
             OutlinedButton.icon(
-              onPressed: _submitting
-                  ? null
-                  : () {
-                      _showMessage(
-                        'Google Sign-In — prochaine étape.',
-                      );
-                    },
+              onPressed: _submitting ? null : _signInWithGoogle,
               icon: const Icon(TablerIcons.brand_google, size: 18),
               label: const Text('Continuer avec Google'),
             ),

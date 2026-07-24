@@ -2,6 +2,10 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+
+import '../firebase/google_oauth_config.dart';
 
 /// Résultat de l'envoi OTP (codeSent).
 class OtpSendResult {
@@ -17,7 +21,7 @@ class OtpSendResult {
 }
 
 /// Service d'authentification Firebase Auth.
-/// OTP SMS + sessions — responsabilité Jean.
+/// OTP SMS, Google Sign-In, sessions — responsabilité Jean.
 class AuthService {
   AuthService({
     FirebaseAuth? auth,
@@ -28,9 +32,20 @@ class AuthService {
   final FirebaseAuth _auth;
   final FirebaseFirestore _firestore;
 
+  static var _googleInitialized = false;
+
   Stream<User?> get authStateChanges => _auth.authStateChanges();
 
   User? get currentUser => _auth.currentUser;
+
+  /// À appeler une fois après Firebase.initializeApp (google_sign_in 7+).
+  static Future<void> initializeGoogleSignIn() async {
+    if (_googleInitialized || kIsWeb) return;
+    await GoogleSignIn.instance.initialize(
+      serverClientId: GoogleOAuthConfig.webClientId,
+    );
+    _googleInitialized = true;
+  }
 
   /// Normalise un numéro béninois vers E.164 (+229…).
   static String normalizeBeninPhone(String raw) {
@@ -50,7 +65,7 @@ class AuthService {
     return '+229$phone';
   }
 
-  /// Envoie le SMS OTP via Firebase (équivalent Android verifyPhoneNumber).
+  /// Envoie le SMS OTP via Firebase.
   Future<OtpSendResult> sendOtp(String rawPhone) async {
     final phoneNumber = normalizeBeninPhone(rawPhone);
     await _auth.setLanguageCode('fr');
@@ -61,7 +76,6 @@ class AuthService {
       phoneNumber: phoneNumber,
       timeout: const Duration(seconds: 60),
       verificationCompleted: (PhoneAuthCredential credential) async {
-        // Auto-retrieval / validation instantanée Android.
         try {
           await _auth.signInWithCredential(credential);
           await ensureUserProfile();
@@ -96,7 +110,6 @@ class AuthService {
         }
       },
       codeAutoRetrievalTimeout: (String verificationId) {
-        // Conservé pour reprise manuelle si auto-retrieval expire.
         if (!completer.isCompleted) {
           completer.complete(
             OtpSendResult(
@@ -125,6 +138,41 @@ class AuthService {
     return result;
   }
 
+  /// Connexion Google → Firebase Auth.
+  /// Retourne null si l'utilisateur annule.
+  Future<UserCredential?> signInWithGoogle() async {
+    if (kIsWeb) {
+      final provider = GoogleAuthProvider();
+      final result = await _auth.signInWithPopup(provider);
+      await ensureUserProfile();
+      return result;
+    }
+
+    await initializeGoogleSignIn();
+
+    try {
+      final googleUser = await GoogleSignIn.instance.authenticate();
+      final idToken = googleUser.authentication.idToken;
+      if (idToken == null) {
+        throw FirebaseAuthException(
+          code: 'missing-id-token',
+          message:
+              'Google n’a pas renvoyé d’idToken. Vérifie le serverClientId.',
+        );
+      }
+
+      final credential = GoogleAuthProvider.credential(idToken: idToken);
+      final result = await _auth.signInWithCredential(credential);
+      await ensureUserProfile();
+      return result;
+    } on GoogleSignInException catch (e) {
+      if (e.code == GoogleSignInExceptionCode.canceled) {
+        return null;
+      }
+      rethrow;
+    }
+  }
+
   /// Crée / met à jour users/{uid} selon le cahier des charges.
   Future<void> ensureUserProfile({String type = 'buyer'}) async {
     final user = _auth.currentUser;
@@ -145,6 +193,7 @@ class AuthService {
       });
     } else {
       await ref.set({
+        'displayName': user.displayName ?? snap.data()?['displayName'] ?? '',
         'phone': user.phoneNumber ?? snap.data()?['phone'] ?? '',
         'email': user.email ?? snap.data()?['email'] ?? '',
         'updatedAt': FieldValue.serverTimestamp(),
@@ -152,5 +201,10 @@ class AuthService {
     }
   }
 
-  Future<void> signOut() => _auth.signOut();
+  Future<void> signOut() async {
+    if (!kIsWeb && _googleInitialized) {
+      await GoogleSignIn.instance.signOut();
+    }
+    await _auth.signOut();
+  }
 }

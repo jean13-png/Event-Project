@@ -71,6 +71,19 @@ class AuthController extends Notifier<AsyncValue<OtpSession?>> {
     }
   }
 
+  /// Retourne false si l'utilisateur annule le sélecteur Google.
+  Future<bool> signInWithGoogle() async {
+    state = const AsyncLoading();
+    try {
+      final result = await _auth.signInWithGoogle();
+      state = const AsyncData(null);
+      return result != null;
+    } catch (e, st) {
+      state = AsyncError(e, st);
+      rethrow;
+    }
+  }
+
   Future<void> signOut() async {
     await _auth.signOut();
     state = const AsyncData(null);
