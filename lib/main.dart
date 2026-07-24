@@ -1,7 +1,9 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'app.dart';
+import 'core/firebase/firebase_options.dart';
 import 'core/theme/app_colors.dart';
 
 Future<void> main() async {
@@ -16,8 +18,9 @@ Future<void> main() async {
     ),
   );
 
-  // Firebase : activer après `flutterfire configure`
-  // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   runApp(const EventBjRoot());
 }

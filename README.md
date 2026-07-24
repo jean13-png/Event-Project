@@ -18,12 +18,16 @@ flutter run
 
 ## Firebase
 
-```bash
-dart pub global activate flutterfire_cli
-flutterfire configure
-```
+Projet : `event-project-e6868`  
+Config générée : `lib/core/firebase/firebase_options.dart`  
+Init dans `lib/main.dart` via `Firebase.initializeApp`.
 
-Puis décommenter l'init Firebase dans `lib/main.dart`.
+Dans la console Firebase, activer au minimum :
+- Authentication (Phone + Google)
+- Cloud Firestore
+- Storage
+- Cloud Messaging
+- Functions (quand on branchera FedaPay)
 
 ## Équipe
 
