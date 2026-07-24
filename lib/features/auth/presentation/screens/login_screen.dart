@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/navigation/app_router.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/design_system.dart';
 import '../providers/auth_providers.dart';
 
 /// Connexion OTP SMS — responsabilité Jean.
@@ -113,13 +114,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
-              'EventBJ',
-              style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                    color: AppColors.navy,
-                  ),
-            ),
-            const SizedBox(height: 8),
+            const EventBjLogo(onDark: false, iconSize: 32),
+            const SizedBox(height: 12),
             Text(
               'Tu recevras un code SMS. Les tarifs standards s’appliquent.',
               style: Theme.of(context).textTheme.bodySmall,
@@ -135,24 +131,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: _submitting ? null : _sendOtp,
-              child: _submitting
-                  ? const SizedBox(
-                      height: 20,
-                      width: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: AppColors.white,
-                      ),
-                    )
-                  : const Text('Recevoir le code SMS'),
+            AppCtaButton(
+              label: 'Recevoir le code SMS',
+              loading: _submitting,
+              onPressed: _sendOtp,
             ),
             const SizedBox(height: 12),
-            OutlinedButton.icon(
+            AppSecondaryButton(
+              label: 'Continuer avec Google',
+              icon: TablerIcons.brand_google,
               onPressed: _submitting ? null : _signInWithGoogle,
-              icon: const Icon(TablerIcons.brand_google, size: 18),
-              label: const Text('Continuer avec Google'),
             ),
             const Spacer(),
             TextButton(

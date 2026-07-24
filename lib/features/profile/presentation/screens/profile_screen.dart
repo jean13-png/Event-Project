@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../core/navigation/app_router.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/design_system.dart';
 import '../../../auth/presentation/providers/auth_providers.dart';
 
-/// Placeholder Profil — module Épiphane (lien vers auth/wallet Jean).
+/// Profil — liens vers modules Jean (auth, wallet, notifs, admin).
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
 
@@ -18,86 +20,157 @@ class ProfileScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: AppColors.sand,
-      appBar: AppBar(title: const Text('Profil')),
-      body: ListView(
-        padding: const EdgeInsets.all(20),
+      body: Column(
         children: [
-          if (user != null) ...[
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: AppColors.white,
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: AppColors.cardShadow,
+          NavyDecorHeader(
+            child: SafeArea(
+              bottom: false,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 12, 12, 20),
+                child: Row(
+                  children: [
+                    const EventBjLogo(onDark: true),
+                    const Spacer(),
+                    IconButton(
+                      tooltip: 'Notifications',
+                      onPressed: () => context.push(AppRoutes.notifications),
+                      icon: const Icon(
+                        TablerIcons.bell,
+                        color: AppColors.white,
+                        size: 20,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Connecté',
-                    style: Theme.of(context).textTheme.headlineMedium,
+            ),
+          ),
+          Expanded(
+            child: ListView(
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 32),
+              children: [
+                if (user != null) ...[
+                  AppSurfaceCard(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Connecté',
+                          style: GoogleFonts.inter(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.ink,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          user.phoneNumber ?? user.email ?? user.uid,
+                          style: GoogleFonts.inter(
+                            fontSize: 12,
+                            color: AppColors.muted,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 12),
+                  _ProfileTile(
+                    icon: TablerIcons.logout,
+                    title: 'Se déconnecter',
+                    onTap: () async {
+                      await ref.read(authControllerProvider.notifier).signOut();
+                    },
+                  ),
+                ] else
+                  _ProfileTile(
+                    icon: TablerIcons.login,
+                    title: 'Connexion',
+                    subtitle: 'OTP SMS ou Google',
+                    onTap: () => context.push(AppRoutes.login),
+                  ),
+                const SizedBox(height: 12),
+                _ProfileTile(
+                  icon: TablerIcons.wallet,
+                  title: 'Portefeuille',
+                  subtitle: 'Solde organisateur',
+                  onTap: () => context.push(AppRoutes.wallet),
+                ),
+                const SizedBox(height: 12),
+                _ProfileTile(
+                  icon: TablerIcons.bell,
+                  title: 'Notifications',
+                  onTap: () => context.push(AppRoutes.notifications),
+                ),
+                const SizedBox(height: 12),
+                _ProfileTile(
+                  icon: TablerIcons.calendar_event,
+                  title: 'Demo page événement',
+                  subtitle: '/events/demo-concert',
+                  onTap: () => context.push('/events/demo-concert'),
+                ),
+                const SizedBox(height: 12),
+                _ProfileTile(
+                  icon: TablerIcons.shield,
+                  title: 'Admin',
+                  subtitle: 'Back-office',
+                  onTap: () => context.push(AppRoutes.admin),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ProfileTile extends StatelessWidget {
+  const _ProfileTile({
+    required this.icon,
+    required this.title,
+    required this.onTap,
+    this.subtitle,
+  });
+
+  final IconData icon;
+  final String title;
+  final String? subtitle;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return AppSurfaceCard(
+      onTap: onTap,
+      child: Row(
+        children: [
+          Icon(icon, color: AppColors.navy, size: 20),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: GoogleFonts.inter(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.ink,
+                  ),
+                ),
+                if (subtitle != null) ...[
+                  const SizedBox(height: 2),
                   Text(
-                    user.phoneNumber ?? user.email ?? user.uid,
-                    style: Theme.of(context).textTheme.bodySmall,
+                    subtitle!,
+                    style: GoogleFonts.inter(
+                      fontSize: 12,
+                      color: AppColors.muted,
+                    ),
                   ),
                 ],
-              ),
+              ],
             ),
-            const SizedBox(height: 12),
-            ListTile(
-              tileColor: AppColors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              leading: const Icon(TablerIcons.logout, color: AppColors.navy),
-              title: const Text('Se déconnecter'),
-              onTap: () async {
-                await ref.read(authControllerProvider.notifier).signOut();
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Déconnecté.')),
-                  );
-                }
-              },
-            ),
-          ] else
-            ListTile(
-              tileColor: AppColors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              leading: const Icon(TablerIcons.login, color: AppColors.navy),
-              title: const Text('Connexion'),
-              subtitle: const Text('OTP SMS — Jean'),
-              onTap: () => context.push(AppRoutes.login),
-            ),
-          const SizedBox(height: 12),
-          ListTile(
-            tileColor: AppColors.white,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
-            leading: const Icon(TablerIcons.wallet, color: AppColors.navy),
-            title: const Text('Portefeuille'),
-            subtitle: const Text('Organisateur — Jean'),
-            onTap: () => context.push(AppRoutes.wallet),
           ),
-          const SizedBox(height: 12),
-          ListTile(
-            tileColor: AppColors.white,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
-            leading: const Icon(
-              TablerIcons.calendar_event,
-              color: AppColors.navy,
-            ),
-            title: const Text('Demo page événement'),
-            subtitle: const Text('/events/demo-concert'),
-            onTap: () => context.push('/events/demo-concert'),
-          ),
+          const Icon(TablerIcons.chevron_right, size: 18, color: AppColors.muted),
         ],
       ),
     );

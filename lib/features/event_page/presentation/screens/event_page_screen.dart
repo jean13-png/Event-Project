@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
+import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 
+import '../../../../core/data/mock_data.dart';
+import '../../../../core/navigation/app_router.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/design_system.dart';
 
 /// Page événement publique (lien partageable) — sans compte requis.
-/// Responsabilité Jean.
 class EventPageScreen extends StatelessWidget {
   const EventPageScreen({super.key, required this.eventId});
 
@@ -12,104 +17,260 @@ class EventPageScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final event = MockData.eventById(eventId);
+
     return Scaffold(
       backgroundColor: AppColors.sand,
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            expandedHeight: 220,
+            expandedHeight: 240,
             pinned: true,
             backgroundColor: AppColors.navy,
+            leading: IconButton(
+              icon: const Icon(TablerIcons.arrow_left, size: 20),
+              onPressed: () {
+                if (context.canPop()) {
+                  context.pop();
+                } else {
+                  context.go(AppRoutes.home);
+                }
+              },
+            ),
+            actions: [
+              IconButton(
+                icon: const Icon(TablerIcons.share, size: 20),
+                tooltip: 'Partager',
+                onPressed: () {
+                  Clipboard.setData(
+                    ClipboardData(
+                      text: 'https://eventbj.page.link/events/${event.id}',
+                    ),
+                  );
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Lien copié')),
+                  );
+                },
+              ),
+            ],
             flexibleSpace: FlexibleSpaceBar(
-              background: Container(
-                color: AppColors.navy,
-                alignment: Alignment.center,
-                child: const Icon(
-                  TablerIcons.calendar_event,
-                  size: 48,
-                  color: AppColors.white,
+              background: NavyDecorHeader(
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const SizedBox(height: 24),
+                      Container(
+                        width: 64,
+                        height: 64,
+                        decoration: BoxDecoration(
+                          color: AppColors.white.withValues(alpha: 0.12),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Icon(
+                          event.categoryIcon,
+                          size: 28,
+                          color: AppColors.white,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 32),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  CategoryBadge(
+                    label: event.category,
+                    icon: event.categoryIcon,
+                  ),
+                  const SizedBox(height: 12),
                   Text(
-                    'Événement',
-                    style: Theme.of(context).textTheme.headlineLarge,
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'ID : $eventId',
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-                  const SizedBox(height: 16),
-                  _MetaRow(
-                    icon: TablerIcons.calendar,
-                    text: 'Date à charger depuis Firestore',
-                  ),
-                  const SizedBox(height: 8),
-                  _MetaRow(
-                    icon: TablerIcons.map_pin,
-                    text: 'Lieu à charger depuis Firestore',
-                  ),
-                  const SizedBox(height: 24),
-                  Text(
-                    'Description',
-                    style: Theme.of(context).textTheme.headlineMedium,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Cette page publique sera alimentée par events/{eventId}. '
-                    'L’achat sans compte (nom + téléphone) arrive ensuite.',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                  const SizedBox(height: 32),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text(
-                              'Achat ticket — flux FedaPay à brancher',
-                            ),
-                          ),
-                        );
-                      },
-                      child: const Text('Acheter un ticket'),
+                    event.title,
+                    style: GoogleFonts.inter(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                      height: 1.3,
+                      letterSpacing: -0.3,
+                      color: AppColors.ink,
                     ),
                   ),
+                  const SizedBox(height: 12),
+                  EventMetaRow(
+                    icon: TablerIcons.calendar,
+                    text: event.dateLabel,
+                  ),
+                  const SizedBox(height: 6),
+                  EventMetaRow(
+                    icon: TablerIcons.clock,
+                    text: event.timeLabel,
+                  ),
+                  const SizedBox(height: 6),
+                  EventMetaRow(
+                    icon: TablerIcons.map_pin,
+                    text: '${event.venue}, ${event.city}',
+                  ),
+                  const SizedBox(height: 22),
+                  Text(
+                    'Description',
+                    style: GoogleFonts.inter(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: -0.3,
+                      color: AppColors.ink,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    event.description.isEmpty
+                        ? 'Description à venir.'
+                        : event.description,
+                    style: GoogleFonts.inter(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      height: 1.5,
+                      color: AppColors.ink,
+                    ),
+                  ),
+                  const SizedBox(height: 22),
+                  Text(
+                    'Tickets',
+                    style: GoogleFonts.inter(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: -0.3,
+                      color: AppColors.ink,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  ...event.tickets.map(
+                    (t) => Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: AppSurfaceCard(
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    t.name,
+                                    style: GoogleFonts.inter(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600,
+                                      color: AppColors.ink,
+                                    ),
+                                  ),
+                                  if (t.description.isNotEmpty) ...[
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      t.description,
+                                      style: GoogleFonts.inter(
+                                        fontSize: 12,
+                                        color: AppColors.muted,
+                                      ),
+                                    ),
+                                  ],
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    '${t.available} places',
+                                    style: GoogleFonts.inter(
+                                      fontSize: 11,
+                                      color: AppColors.muted,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            PriceText(amountXof: t.priceXof, fontSize: 15),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  AppCtaButton(
+                    label: 'Acheter un ticket',
+                    icon: TablerIcons.ticket,
+                    onPressed: () => context.push(
+                      '/events/${event.id}/checkout',
+                    ),
+                  ),
+                  const SizedBox(height: 26),
+                  Text(
+                    'Autres événements',
+                    style: GoogleFonts.inter(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: -0.3,
+                      color: AppColors.ink,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  ...MockData.suggestions
+                      .where((e) => e.id != event.id)
+                      .map(
+                        (e) => Padding(
+                          padding: const EdgeInsets.only(bottom: 12),
+                          child: AppSurfaceCard(
+                            onTap: () => context.push('/events/${e.id}'),
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: 44,
+                                  height: 44,
+                                  decoration: BoxDecoration(
+                                    color: AppColors.sand,
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Icon(
+                                    e.categoryIcon,
+                                    size: 20,
+                                    color: AppColors.navy,
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        e.title,
+                                        style: GoogleFonts.inter(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600,
+                                          color: AppColors.ink,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 2),
+                                      Text(
+                                        '${e.dateLabel} · ${e.city}',
+                                        style: GoogleFonts.inter(
+                                          fontSize: 12,
+                                          color: AppColors.muted,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                PriceText(amountXof: e.minPrice),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
                 ],
               ),
             ),
           ),
         ],
       ),
-    );
-  }
-}
-
-class _MetaRow extends StatelessWidget {
-  const _MetaRow({required this.icon, required this.text});
-
-  final IconData icon;
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Icon(icon, size: 13, color: AppColors.muted),
-        const SizedBox(width: 8),
-        Expanded(
-          child: Text(text, style: Theme.of(context).textTheme.bodySmall),
-        ),
-      ],
     );
   }
 }
