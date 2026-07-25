@@ -25,9 +25,9 @@ class HeroCard extends StatelessWidget {
               child: Container(
                 width: 120,
                 height: 120,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.white.withValues(alpha: 0.1),
+                  color: Color(0x26FFFFFF),
                 ),
               ),
             ),
@@ -121,20 +121,20 @@ class HeroCard extends StatelessWidget {
     );
   }
 
-  int _bgColor(String category) {
+  Color _bgColor(String category) {
     switch (category.toLowerCase()) {
       case 'concert':
-        return AppColors.navyValue;
+        return AppColors.navy;
       case 'soiree':
-        return 0xFF2D1B4E;
+        return const Color(0xFF2D1B4E);
       case 'culture':
-        return 0xFF2D1B4E;
+        return const Color(0xFF2D1B4E);
       case 'gastronomie':
-        return 0xFF3D1F00;
+        return const Color(0xFF3D1F00);
       case 'sport':
-        return 0xFF0B4D32;
+        return const Color(0xFF0B4D32);
       default:
-        return AppColors.navyValue;
+        return AppColors.navy;
     }
   }
 }

@@ -12,9 +12,9 @@ class EventBjApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
-        statusBarColor: AppColors.navy,
+        statusBarColor: Color(0xFF0D3B6E),
         statusBarIconBrightness: Brightness.light,
-        systemNavigationBarColor: AppColors.sand,
+        systemNavigationBarColor: Color(0xFFF5F4EF),
       ),
     );
 
@@ -23,6 +23,17 @@ class EventBjApp extends ConsumerWidget {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
       routerConfig: appRouter,
+    );
+  }
+}
+
+class EventBjRoot extends StatelessWidget {
+  const EventBjRoot({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const ProviderScope(
+      child: EventBjApp(),
     );
   }
 }

@@ -25,7 +25,7 @@ class NotificationsScreen extends StatelessWidget {
       body: ListView.separated(
         padding: const EdgeInsets.fromLTRB(20, 20, 20, 32),
         itemCount: MockData.notifications.length,
-        separatorBuilder: (_, _) => const SizedBox(height: 12),
+        separatorBuilder: (context, index) => const SizedBox(height: 12),
         itemBuilder: (context, index) {
           final n = MockData.notifications[index];
           return AppSurfaceCard(

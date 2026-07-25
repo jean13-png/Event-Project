@@ -54,9 +54,9 @@ abstract final class AppColors {
     );
   }
 
-  static BoxDecoration heroCardDecoration(int colorValue) {
+  static BoxDecoration heroCardDecoration(Color color) {
     return BoxDecoration(
-      color: Color(colorValue),
+      color: color,
       borderRadius: BorderRadius.circular(22),
     );
   }
