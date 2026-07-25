@@ -39,7 +39,6 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-  # TODO: ajouter les assets (police Inter, images) après configuration
   fonts:
     - family: Inter
       fonts:
