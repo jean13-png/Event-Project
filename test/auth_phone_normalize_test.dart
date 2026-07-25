@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:event_bj/core/services/auth_service.dart';
+import 'package:eventbj/core/services/auth_service.dart';
 
 void main() {
   group('AuthService.normalizeBeninPhone', () {

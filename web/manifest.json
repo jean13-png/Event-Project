@@ -1,6 +1,6 @@
 {
-    "name": "event_bj",
-    "short_name": "event_bj",
+    "name": "eventbj",
+    "short_name": "eventbj",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

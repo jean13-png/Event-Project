@@ -1,13 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:event_bj/app.dart';
+
+import 'package:eventbj/app.dart';
 
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
-
-  testWidgets('EventBJ UI shell se monte', (tester) async {
-    // Teste le shell UI sans init Firebase (évite les plugins natifs).
+  testWidgets('EventBJ app smoke test', (WidgetTester tester) async {
     await tester.pumpWidget(const EventBjApp());
-    await tester.pump();
 
     expect(find.text('EventBJ'), findsWidgets);
   });
