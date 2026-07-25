@@ -6,29 +6,30 @@
 .DS_Store
 .atom/
 .build/
-.buildlog/
+.buildlog
+.env
+.env.local
+.env.*
 .history
 .svn/
 .swiftpm/
 migrate_working_dir/
-
-# IntelliJ related
+.idea
+.vscode
 *.iml
 *.ipr
 *.iws
-.idea/
-
-# VS Code related
-.vscode/
 
 # Flutter/Dart/Pub related
-**/doc/api/
-**/ios/Flutter/.last_build_id
 .dart_tool/
+.flutter-plugins
 .flutter-plugins-dependencies
+.packages
 .pub-cache/
 .pub/
 /build/
+**/doc/api/
+**/ios/Flutter/.last_build_id
 /coverage/
 
 # Symbolication related
@@ -46,7 +47,11 @@ app.*.map.json
 ~$*
 .~lock.*
 
-# Firebase local
+# Firebase
+firebase-debug.log
+firebase.json
+.firebaserc
 firebase_options_local.dart
-.env
-.env.*
+
+# OS
+Thumbs.db

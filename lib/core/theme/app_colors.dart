@@ -38,4 +38,48 @@ abstract final class AppColors {
           offset: const Offset(0, -4),
         ),
       ];
+
+  static BoxDecoration cardDecoration() {
+    return BoxDecoration(
+      color: white,
+      borderRadius: BorderRadius.circular(16),
+      boxShadow: cardShadow,
+    );
+  }
+
+  static BoxDecoration cardDecoBubble() {
+    return const BoxDecoration(
+      shape: BoxShape.circle,
+      color: Color(0x140D3B6E),
+    );
+  }
+
+  static BoxDecoration heroCardDecoration(int colorValue) {
+    return BoxDecoration(
+      color: Color(colorValue),
+      borderRadius: BorderRadius.circular(22),
+    );
+  }
+
+  static BoxDecoration categoryPillActiveDecoration() {
+    return BoxDecoration(
+      color: navy,
+      borderRadius: BorderRadius.circular(30),
+    );
+  }
+
+  static BoxDecoration categoryPillInactiveDecoration() {
+    return BoxDecoration(
+      color: white,
+      borderRadius: BorderRadius.circular(30),
+      boxShadow: const [
+        BoxShadow(
+          color: Color(0x0F000000),
+          offset: Offset(0, 2),
+          blurRadius: 8,
+          spreadRadius: 0,
+        ),
+      ],
+    );
+  }
 }
