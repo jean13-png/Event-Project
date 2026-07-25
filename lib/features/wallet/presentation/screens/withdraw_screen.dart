@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/design_system.dart';
+import '../providers/wallet_providers.dart';
 
-/// Demande de retrait Mobile Money.
-class WithdrawScreen extends StatefulWidget {
+class WithdrawScreen extends ConsumerStatefulWidget {
   const WithdrawScreen({super.key});
 
   @override
-  State<WithdrawScreen> createState() => _WithdrawScreenState();
+  ConsumerState<WithdrawScreen> createState() => _WithdrawScreenState();
 }
 
-class _WithdrawScreenState extends State<WithdrawScreen> {
+class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
   final _amountController = TextEditingController();
   final _phoneController = TextEditingController();
   var _operator = 'mtn';
@@ -35,17 +36,42 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
       );
       return;
     }
+
+    final amount = int.tryParse(_amountController.text.trim());
+    if (amount == null || amount <= 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Montant invalide')),
+      );
+      return;
+    }
+
+    final activeId = ref.read(activeWalletIdProvider);
+
     setState(() => _loading = true);
-    await Future<void>.delayed(const Duration(milliseconds: 700));
-    if (!mounted) return;
-    setState(() => _loading = false);
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Demande de retrait envoyée (mock)'),
-        backgroundColor: AppColors.green,
-      ),
-    );
-    context.pop();
+    try {
+      final id = await ref.read(walletServiceProvider).requestWithdrawal(
+            organizerId: activeId,
+            amount: amount,
+            mobileMoneyNumber: _phoneController.text.trim(),
+            operator: _operator,
+          );
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Retrait demandé (ref: $id)'),
+          backgroundColor: AppColors.green,
+        ),
+      );
+      context.pop();
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Erreur: $e')),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _loading = false);
+    }
   }
 
   @override
@@ -126,7 +152,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
           AppCtaButton(
             label: 'Confirmer le retrait',
             loading: _loading,
-            onPressed: _submit,
+            onPressed: _loading ? null : _submit,
           ),
           const SizedBox(height: 12),
           AppSecondaryButton(
