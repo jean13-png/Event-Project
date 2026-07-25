@@ -12,7 +12,7 @@ class CategoryModel {
     this.sortOrder = 0,
   });
 
-  static const List<CategoryModel> all = [
+  static final List<CategoryModel> all = [
     CategoryModel(id: 'concert', label: 'Concert', iconName: 'music', sortOrder: 1),
     CategoryModel(id: 'soiree', label: 'Soirée', iconName: 'moon-stars', sortOrder: 2),
     CategoryModel(id: 'sport', label: 'Sport', iconName: 'trophy', sortOrder: 3),

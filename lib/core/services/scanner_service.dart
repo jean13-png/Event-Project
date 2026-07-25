@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../shared/models/event_model.dart';
 
 class ScannerService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;

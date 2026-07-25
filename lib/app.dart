@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'core/theme/app_colors.dart';
+import 'features/home/presentation/screens/home_screen.dart';
 
 class EventBJApp extends ConsumerWidget {
   const EventBJApp({super.key});
@@ -34,22 +35,14 @@ class EventBJApp extends ConsumerWidget {
         ),
         textTheme: const TextTheme(
           displayLarge: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: AppColors.ink),
-          headlineMedium: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.ink),
+          headlineMedium: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.ink, letterSpacing: -0.3),
           bodyMedium: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: AppColors.ink, height: 1.5),
           bodySmall: TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: AppColors.muted, height: 1.5),
           labelSmall: TextStyle(fontSize: 11, fontWeight: FontWeight.w400, color: AppColors.muted),
         ),
         useMaterial3: false,
       ),
-      home: Scaffold(
-        backgroundColor: AppColors.sand,
-        body: Center(
-          child: Text(
-            'EventBJ — Fondations prêtes',
-            style: const TextStyle(color: AppColors.ink, fontSize: 16, fontWeight: FontWeight.w600),
-          ),
-        ),
-      ),
+      home: const HomeScreen(),
     );
   }
 }

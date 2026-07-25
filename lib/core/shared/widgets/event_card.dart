@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import '../../theme/app_colors.dart';
+import '../../theme/app_text_styles.dart';
 import '../../shared/models/event_model.dart';
+import 'event_detail_meta.dart';
 
 class EventCard extends StatelessWidget {
   final EventModel event;
@@ -38,6 +39,7 @@ class EventCard extends StatelessWidget {
                       Text(
                         event.time.format(context),
                         style: const TextStyle(
+                          fontFamily: 'Inter',
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
                           color: AppColors.ink,
@@ -49,6 +51,7 @@ class EventCard extends StatelessWidget {
                   Text(
                     event.title,
                     style: const TextStyle(
+                      fontFamily: 'Inter',
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
                       color: AppColors.ink,
@@ -78,6 +81,7 @@ class EventCard extends StatelessWidget {
                         child: Text(
                           event.category,
                           style: const TextStyle(
+                            fontFamily: 'Inter',
                             fontSize: 10,
                             fontWeight: FontWeight.w600,
                             color: AppColors.white,
@@ -90,7 +94,7 @@ class EventCard extends StatelessWidget {
                           style: AppTextStyles.pricePaid(),
                         )
                       else
-                        const Text(
+                        Text(
                           'Gratuit',
                           style: AppTextStyles.priceFree(),
                         ),

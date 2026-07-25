@@ -1,7 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 import 'dart:io';
 import '../shared/models/event_model.dart';
 
@@ -118,11 +116,13 @@ class OrganizerService {
 
       for (final eventDoc in eventsSnap.docs) {
         final eventData = eventDoc.data();
-        for (final ticket in eventData['tickets'] as List<dynamic>?) {
-          ?? []
-        }) {
-          totalSold += ticket['soldQty'] ?? 0;
-          totalRevenue += (ticket['price'] ?? 0) * (ticket['soldQty'] ?? 0);
+        final tickets = (eventData['tickets'] as List<dynamic>?) ?? [];
+        for (final ticket in tickets) {
+          final map = ticket as Map<String, dynamic>;
+          final sold = map['soldQty'];
+          totalSold += sold is int ? sold : (sold as num?)?.toInt() ?? 0;
+          final price = map['price'];
+          totalRevenue += (price is double ? price : (price as num?)?.toDouble() ?? 0.0) * (sold is int ? sold.toDouble() : (sold as num?)?.toDouble() ?? 0.0);
         }
       }
 
