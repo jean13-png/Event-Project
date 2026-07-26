@@ -1,4 +1,4 @@
-package com.example.eventbj
+package com.beugredev.eventbj
 
 import io.flutter.embedding.android.FlutterActivity
 
