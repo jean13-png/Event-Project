@@ -112,6 +112,10 @@ class EventModel {
     return '$d ${date.day} ${months[date.month - 1]} ${date.year}';
   }
 
+  String get timeLabel => time;
+  String get venue => locationName;
+  String get location => '$locationName, $city';
+
   Map<String, dynamic> toMap() => {
         'title': title,
         'description': description,
