@@ -13,12 +13,14 @@ class PaymentSession {
     required this.amount,
     this.checkoutUrl,
     this.simulated = false,
+    this.ticketIds = const [],
   });
 
   final String reference;
   final int amount;
   final String? checkoutUrl;
   final bool simulated;
+  final List<String> ticketIds;
 }
 
 /// Paiement via Cloud Functions (FedaPay). Jamais d'appel API direct.
@@ -70,6 +72,7 @@ class PaymentService {
         reference: reference,
         amount: 0,
         simulated: true,
+        ticketIds: ticketIds,
       );
     }
 
@@ -93,6 +96,7 @@ class PaymentService {
         reference: data['reference'] as String? ?? reference,
         amount: amount,
         checkoutUrl: checkoutUrl,
+        ticketIds: const [],
       );
     } on FirebaseFunctionsException catch (e, st) {
       AppLog.error(
@@ -101,7 +105,7 @@ class PaymentService {
         st,
       );
       // Dev fallback : simule un paiement réussi
-      await _fulfillPurchase(
+      final ticketIds = await _fulfillPurchase(
         eventId: eventId,
         ticketType: ticketType,
         quantity: quantity,
@@ -115,6 +119,7 @@ class PaymentService {
         reference: reference,
         amount: amount,
         simulated: true,
+        ticketIds: ticketIds,
       );
     }
   }

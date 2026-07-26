@@ -101,6 +101,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
           'ticketName': _selected.type,
           'amount': _total,
           'method': _method,
+          'ticketIds': session.ticketIds,
         },
       );
     } catch (e, st) {

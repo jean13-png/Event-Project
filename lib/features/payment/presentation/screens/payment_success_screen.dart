@@ -16,18 +16,24 @@ class PaymentSuccessScreen extends StatelessWidget {
     required this.buyerName,
     required this.ticketName,
     required this.amountXof,
+    this.ticketIds = const [],
   });
 
   final String eventId;
   final String buyerName;
   final String ticketName;
   final int amountXof;
+  final List<String> ticketIds;
+
+  String get _qrPayload {
+    if (ticketIds.isNotEmpty) {
+      return 'eventbj:ticket:${ticketIds.first}:$eventId';
+    }
+    return 'eventbj:$eventId:${buyerName.hashCode}:$ticketName:${DateTime.now().millisecondsSinceEpoch}';
+  }
 
   @override
   Widget build(BuildContext context) {
-    final qrPayload =
-        'eventbj:$eventId:${buyerName.hashCode}:$ticketName:${DateTime.now().millisecondsSinceEpoch}';
-
     return Scaffold(
       backgroundColor: AppColors.sand,
       body: SafeArea(
@@ -74,7 +80,7 @@ class PaymentSuccessScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     QrImageView(
-                      data: qrPayload,
+                      data: _qrPayload,
                       size: 180,
                       backgroundColor: AppColors.white,
                       eyeStyle: const QrEyeStyle(
