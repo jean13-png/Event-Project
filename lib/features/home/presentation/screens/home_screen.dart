@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/shared/models/event_model.dart';
 import '../../../../core/shared/widgets/event_card.dart';
 import '../../../../core/shared/widgets/hero_card.dart';
-import '../../../../core/shared/widgets/section_header.dart';
 import '../providers/home_providers.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -19,23 +18,165 @@ class HomeScreen extends ConsumerWidget {
     return Scaffold(
       backgroundColor: AppColors.sand,
       body: SafeArea(
+        bottom: false,
         child: RefreshIndicator(
           onRefresh: () async {
             ref.invalidate(featuredEventsProvider);
             ref.invalidate(tonightEventsProvider);
             ref.invalidate(upcomingEventsProvider);
           },
-          child: ListView(
-            physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-            padding: EdgeInsets.zero,
-            children: [
-              _buildHeader(context),
-              _buildSearchBar(),
-              const SizedBox(height: 22),
-              _buildFeaturedSection(featuredAsync),
-              _buildTonightSection(tonightAsync),
-              _buildUpcomingSection(upcomingAsync),
-              const SizedBox(height: 80),
+          child: CustomScrollView(
+            physics: const BouncingScrollPhysics(),
+            slivers: [
+              SliverToBoxAdapter(child: _buildHeader(context)),
+              SliverToBoxAdapter(
+                child: _buildSearchBar(),
+              ),
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 24, 20, 0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'À la une',
+                        style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: -0.3,
+                          color: AppColors.ink,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                    ],
+                  ),
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: SizedBox(
+                  height: 220,
+                  child: featuredAsync.when(
+                    loading: () => const Center(child: CircularProgressIndicator(color: AppColors.navy)),
+                    error: (e, _) => Center(child: Text('Erreur: $e', style: const TextStyle(color: AppColors.muted))),
+                    data: (events) {
+                      if (events.isEmpty) {
+                        return const Center(child: Text('Aucun événement en vedette', style: TextStyle(color: AppColors.muted)));
+                      }
+                      return ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        itemCount: events.length,
+                        itemBuilder: (context, index) {
+                          final ev = events[index];
+                          return Padding(
+                            padding: EdgeInsets.only(right: index < events.length - 1 ? 14 : 20),
+                            child: HeroCard(event: ev),
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 28, 20, 0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Ce soir',
+                        style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: -0.3,
+                          color: AppColors.ink,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                    ],
+                  ),
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: tonightAsync.when(
+                  loading: () => const SizedBox(height: 120, child: Center(child: CircularProgressIndicator(color: AppColors.navy))),
+                  error: (e, _) => Center(child: Text('Erreur: $e', style: const TextStyle(color: AppColors.muted))),
+                  data: (events) {
+                    if (events.isEmpty) {
+                      return const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                        child: Text('Aucun événement ce soir', style: TextStyle(color: AppColors.muted)),
+                      );
+                    }
+                    return Column(
+                      children: events
+                          .asMap()
+                          .entries
+                          .map((entry) => Padding(
+                                padding: EdgeInsets.only(
+                                  left: 20,
+                                  right: 20,
+                                  top: entry.key == 0 ? 0 : 12,
+                                ),
+                                child: EventCard(event: entry.value),
+                              ))
+                          .toList(),
+                    );
+                  },
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 28, 20, 0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Prochainement',
+                        style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: -0.3,
+                          color: AppColors.ink,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                    ],
+                  ),
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: upcomingAsync.when(
+                  loading: () => const SizedBox(height: 120, child: Center(child: CircularProgressIndicator(color: AppColors.navy))),
+                  error: (e, _) => Center(child: Text('Erreur: $e', style: const TextStyle(color: AppColors.muted))),
+                  data: (events) {
+                    if (events.isEmpty) {
+                      return const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                        child: Text('Aucun événement à venir', style: TextStyle(color: AppColors.muted)),
+                      );
+                    }
+                    return Column(
+                      children: events
+                          .asMap()
+                          .entries
+                          .map((entry) => Padding(
+                                padding: EdgeInsets.only(
+                                  left: 20,
+                                  right: 20,
+                                  bottom: entry.key < events.length - 1 ? 12 : 24,
+                                ),
+                                child: EventCard(event: entry.value),
+                              ))
+                          .toList(),
+                    );
+                  },
+                ),
+              ),
             ],
           ),
         ),
@@ -46,7 +187,7 @@ class HomeScreen extends ConsumerWidget {
   Widget _buildHeader(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(20, 18, 20, 24),
+      padding: const EdgeInsets.fromLTRB(20, 18, 20, 22),
       decoration: const BoxDecoration(
         color: AppColors.navy,
         borderRadius: BorderRadius.only(
@@ -115,7 +256,7 @@ class HomeScreen extends ConsumerWidget {
             'Bonjour',
             style: TextStyle(
               fontFamily: 'Inter',
-              fontSize: 20,
+              fontSize: 22,
               fontWeight: FontWeight.w600,
               color: AppColors.white,
               height: 1.3,
@@ -128,7 +269,7 @@ class HomeScreen extends ConsumerWidget {
               fontFamily: 'Inter',
               fontSize: 14,
               fontWeight: FontWeight.w400,
-              color: AppColors.white.withValues(alpha: 0.8),
+              color: AppColors.white.withValues(alpha: 0.85),
               height: 1.5,
             ),
           ),
@@ -197,124 +338,6 @@ class HomeScreen extends ConsumerWidget {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildFeaturedSection(AsyncValue<List<EventModel>> async) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SectionHeader(
-          title: 'À la une',
-          onSeeAll: null,
-        ),
-        SizedBox(
-          height: 240,
-          child: async.when(
-            loading: () => const Center(child: CircularProgressIndicator(color: AppColors.navy)),
-            error: (e, _) => Center(child: Text('Erreur: $e', style: const TextStyle(color: AppColors.muted))),
-            data: (events) {
-              if (events.isEmpty) return const SizedBox.shrink();
-              return ListView.builder(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                itemCount: events.length,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: EdgeInsets.only(right: index < events.length - 1 ? 14 : 20),
-                    child: HeroCard(event: events[index]),
-                  );
-                },
-              );
-            },
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildTonightSection(AsyncValue<List<EventModel>> async) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SectionHeader(
-          title: 'Ce soir',
-          onSeeAll: null,
-        ),
-        SizedBox(
-          height: 140,
-          child: async.when(
-            loading: () => const Center(child: CircularProgressIndicator(color: AppColors.navy)),
-            error: (e, _) => Center(child: Text('Erreur: $e', style: const TextStyle(color: AppColors.muted))),
-            data: (events) {
-              if (events.isEmpty) {
-                return const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: Text(
-                    'Aucun événement ce soir',
-                    style: TextStyle(fontFamily: 'Inter', fontSize: 14, color: AppColors.muted),
-                  ),
-                );
-              }
-              return ListView.builder(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                itemCount: events.length,
-                itemBuilder: (context, index) {
-                  return SizedBox(
-                    width: 280,
-                    child: Padding(
-                      padding: EdgeInsets.only(right: index < events.length - 1 ? 12 : 20),
-                      child: EventCard(event: events[index]),
-                    ),
-                  );
-                },
-              );
-            },
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildUpcomingSection(AsyncValue<List<EventModel>> async) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SectionHeader(
-          title: 'Prochainement',
-          onSeeAll: null,
-        ),
-        async.when(
-          loading: () => const Center(child: CircularProgressIndicator(color: AppColors.navy)),
-          error: (e, _) => Center(child: Text('Erreur: $e', style: const TextStyle(color: AppColors.muted))),
-          data: (events) {
-            if (events.isEmpty) {
-              return const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                child: Text(
-                  'Aucun événement à venir',
-                  style: TextStyle(fontFamily: 'Inter', fontSize: 14, color: AppColors.muted),
-                ),
-              );
-            }
-            return Column(
-              children: events
-                  .asMap()
-                  .entries
-                  .map((entry) => Padding(
-                        padding: EdgeInsets.only(
-                          left: 20,
-                          right: 20,
-                          bottom: entry.key < events.length - 1 ? 12 : 20,
-                        ),
-                        child: EventCard(event: entry.value),
-                      ))
-                  .toList(),
-            );
-          },
-        ),
-      ],
     );
   }
 }
