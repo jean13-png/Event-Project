@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Palette MyMood — source : DESIGN.md
+/// Palette EventBJ — source : DESIGN.md
 abstract final class AppColors {
   static const Color navy = Color(0xFF0D3B6E);
   static const Color orange = Color(0xFFE8501A);

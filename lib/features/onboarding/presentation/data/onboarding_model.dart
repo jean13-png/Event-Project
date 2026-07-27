@@ -12,21 +12,21 @@ class OnboardingSlide {
 
 const onboardingSlides = [
   OnboardingSlide(
-    title: 'Bienvenue sur MyMood',
+    title: 'Bienvenue sur EventBJ',
     description:
-        'Explorez les meilleurs événements, adresses chill, restaurants et spots incontournables au Bénin. C\'est vous qui choisissez l\'ambiance.',
+        'Découvrez les meilleurs événements au Bénin : concerts, soirées, festivals, sports et activités culturelles.',
     imagePath: 'assets/images/onboarding/onboard_1.png',
   ),
   OnboardingSlide(
-    title: 'Trouvez les meilleures soirées',
+    title: 'Ne ratez aucun événement',
     description:
-        'Concerts, festivals, soirées à thème ou afterworks... Ne ratez plus aucun événement vibrant au Bénin.',
+        'Retrouvez tous les événements près de chez vous, filtrez par catégorie, ville ou date, et réservez en quelques clics.',
     imagePath: 'assets/images/onboarding/onboard_2.png',
   ),
   OnboardingSlide(
-    title: 'Détendez-vous et savourez',
+    title: 'Préparez votre sortie',
     description:
-        'Lounges cosy, rooftops avec vue, bars à jus ou restaurants gourmands... Découvrez les meilleurs spots pour décompresser.',
+        'Achetez vos tickets en ligne, recevez votre QR code et présentez-le directement à l’entrée.',
     imagePath: 'assets/images/onboarding/onboard_3.png',
   ),
 ];
