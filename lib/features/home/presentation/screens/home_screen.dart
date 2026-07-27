@@ -64,16 +64,25 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
                 slivers: [
                   SliverToBoxAdapter(child: _buildHeader(context)),
-                  SliverToBoxAdapter(child: _buildCategoryFilters()),
-                  SliverToBoxAdapter(child: const SizedBox(height: 16)),
-                  SliverToBoxAdapter(child: _buildFeaturedSection(featuredAsync)),
-                  SliverToBoxAdapter(child: const SizedBox(height: 24)),
-                  SliverToBoxAdapter(child: _buildTonightSection(tonightAsync)),
-                  SliverToBoxAdapter(child: const SizedBox(height: 32)),
-                  SliverToBoxAdapter(child: _buildOrganizerPromoBanner()),
-                  SliverToBoxAdapter(child: const SizedBox(height: 32)),
-                  SliverToBoxAdapter(child: _buildUpcomingSection(upcomingAsync)),
-                  SliverToBoxAdapter(child: const SizedBox(height: 100)),
+                  SliverToBoxAdapter(
+                    child: Container(
+                      color: AppColors.sand, // Solid background covers the fixed navy block when scrolling
+                      child: Column(
+                        children: [
+                          _buildCategoryFilters(),
+                          const SizedBox(height: 16),
+                          _buildFeaturedSection(featuredAsync),
+                          const SizedBox(height: 24),
+                          _buildTonightSection(tonightAsync),
+                          const SizedBox(height: 32),
+                          _buildOrganizerPromoBanner(),
+                          const SizedBox(height: 32),
+                          _buildUpcomingSection(upcomingAsync),
+                          const SizedBox(height: 100),
+                        ],
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),

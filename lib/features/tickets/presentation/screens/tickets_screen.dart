@@ -94,21 +94,19 @@ class TicketsScreen extends ConsumerWidget {
                 SliverToBoxAdapter(
                   child: _buildHeader(),
                 ),
-                SliverPadding(
-                  padding: const EdgeInsets.fromLTRB(20, 24, 20, 100),
-                  sliver: ticketsAsync.when(
-                    loading: () => const SliverFillRemaining(
-                      child: Center(child: CircularProgressIndicator(color: AppColors.navy)),
-                    ),
-                    error: (e, _) => SliverFillRemaining(
-                      child: Center(child: Text('Erreur: $e', style: GoogleFonts.inter(color: AppColors.muted))),
-                    ),
-                    data: (tickets) {
-                      if (tickets.isEmpty) {
-                        return SliverFillRemaining(
-                          child: Column(
+                SliverToBoxAdapter(
+                  child: Container(
+                    color: AppColors.sand, // Solid background
+                    padding: const EdgeInsets.fromLTRB(20, 24, 20, 100),
+                    child: ticketsAsync.when(
+                      loading: () => const Center(child: CircularProgressIndicator(color: AppColors.navy)),
+                      error: (e, _) => Center(child: Text('Erreur: $e', style: GoogleFonts.inter(color: AppColors.muted))),
+                      data: (tickets) {
+                        if (tickets.isEmpty) {
+                          return Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
+                              const SizedBox(height: 40),
                               const Icon(TablerIcons.ticket_off, size: 48, color: AppColors.muted),
                               const SizedBox(height: 16),
                               Text(
@@ -122,22 +120,16 @@ class TicketsScreen extends ConsumerWidget {
                                 style: GoogleFonts.inter(fontSize: 14, color: AppColors.muted, height: 1.5),
                               ),
                             ],
-                          ),
+                          );
+                        }
+                        return Column(
+                          children: tickets.map((ticket) => Padding(
+                            padding: const EdgeInsets.only(bottom: 20),
+                            child: _TicketCard(ticket: ticket),
+                          )).toList(),
                         );
-                      }
-                      return SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                          (context, index) {
-                            final ticket = tickets[index];
-                            return Padding(
-                              padding: const EdgeInsets.only(bottom: 20),
-                              child: _TicketCard(ticket: ticket),
-                            );
-                          },
-                          childCount: tickets.length,
-                        ),
-                      );
-                    },
+                      },
+                    ),
                   ),
                 ),
               ],
