@@ -185,7 +185,7 @@ class _DotsIndicator extends StatelessWidget {
           animation: pageController,
           builder: (context, child) {
             double delta = 0;
-            if (pageController.position.hasPixels) {
+            if (pageController.hasClients && pageController.position.hasPixels) {
               delta = (pageController.page ?? 0) - index;
             }
             final isActive = delta.abs() < 0.5;
