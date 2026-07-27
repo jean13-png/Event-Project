@@ -116,9 +116,9 @@ class PaymentSuccessScreen extends StatelessWidget {
               ),
               const Spacer(),
               AppCtaButton(
-                label: 'Voir mes billets',
-                icon: TablerIcons.ticket,
-                onPressed: () => context.go(AppRoutes.tickets),
+                label: 'Voir mes pass',
+                icon: TablerIcons.qrcode,
+                onPressed: () => context.go(AppRoutes.pass),
               ),
               const SizedBox(height: 12),
               AppSecondaryButton(
