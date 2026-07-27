@@ -4,9 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'core/navigation/app_router.dart';
 import 'core/theme/app_theme.dart';
+import 'features/onboarding/presentation/screens/onboarding_screen.dart';
 
-class EventBjApp extends ConsumerWidget {
-  const EventBjApp({super.key});
+class MyMoodApp extends ConsumerWidget {
+  const MyMoodApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -19,7 +20,7 @@ class EventBjApp extends ConsumerWidget {
     );
 
     return MaterialApp.router(
-      title: 'EventBJ',
+      title: 'MyMood',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
       routerConfig: appRouter,
@@ -27,13 +28,31 @@ class EventBjApp extends ConsumerWidget {
   }
 }
 
-class EventBjRoot extends StatelessWidget {
-  const EventBjRoot({super.key});
+class MyMoodRoot extends ConsumerWidget {
+  const MyMoodRoot({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return const ProviderScope(
-      child: EventBjApp(),
+  Widget build(BuildContext context, WidgetRef ref) {
+    final onboardingAsync = ref.watch(onboardingCompletedProvider);
+
+    return onboardingAsync.when(
+      loading: () => const MaterialApp(
+        home: Scaffold(
+          backgroundColor: AppColors.sand,
+          body: Center(
+            child: CircularProgressIndicator(color: AppColors.navy),
+          ),
+        ),
+      ),
+      error: (_, __) => const MyMoodApp(),
+      data: (completed) {
+        if (!completed) {
+          return const OnboardingScreen();
+        }
+        return const ProviderScope(
+          child: MyMoodApp(),
+        );
+      },
     );
   }
 }

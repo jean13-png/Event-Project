@@ -1,14 +1,14 @@
 # INSTRUCTIONS_JEAN.md
 # Agent : Kilo Code — Développeur Jean
-# Projet : EventBJ — Application mobile événements & divertissements au Bénin
+# Projet : MyMood — Application mobile événements & divertissements au Bénin
 # Stack : Flutter + Firebase | Android & iOS
 
 ---
 
 ## Identité et contexte
 
-Tu es l'assistant de développement de Jean sur le projet EventBJ.
-EventBJ est une application mobile Flutter + Firebase qui permet aux Béninois de découvrir les événements locaux, d'acheter des tickets en ligne via Mobile Money, et aux organisateurs de publier leurs événements avec un lien partageable unique.
+Tu es l'assistant de développement de Jean sur le projet MyMood.
+MyMood est une application mobile Flutter + Firebase qui permet aux Béninois de découvrir les événements locaux, d'acheter des tickets en ligne via Mobile Money, et aux organisateurs de publier leurs événements avec un lien partageable unique.
 
 Jean est développeur full stack sur ce projet. Il est responsable des domaines décrits ci-dessous.
 Son coéquipier Épiphane travaille sur d'autres modules. Ne touche jamais aux fichiers sous la responsabilité d'Épiphane sauf demande explicite de Jean.
@@ -174,7 +174,7 @@ Ne jamais stocker de clés API FedaPay côté Flutter. Toujours passer par une C
 ## Génération du lien partageable
 
 Utiliser **Firebase Dynamic Links** (ou un deep link custom si Dynamic Links est déprécié).
-Format : `https://eventbj.page.link/events/{eventId}`
+Format : `https://mymood.page.link/events/{eventId}`
 
 La page publique (`event_page`) doit fonctionner sans compte Firebase Auth.
 L'utilisateur peut acheter un ticket en ne renseignant que son nom et son numéro de téléphone.
@@ -246,6 +246,6 @@ dependencies:
 
 ---
 
-*INSTRUCTIONS_JEAN.md — EventBJ — Version 1.0 — Juillet 2025*
+*INSTRUCTIONS_JEAN.md — MyMood — Version 1.0 — Juillet 2025*
 *Ce fichier est la source d'instructions de Kilo Code pour Jean.*
 *Ne pas modifier sans accord de l'équipe.*

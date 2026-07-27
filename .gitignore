@@ -55,3 +55,4 @@ firebase_options_local.dart
 
 # OS
 Thumbs.db
+functions/node_modules/

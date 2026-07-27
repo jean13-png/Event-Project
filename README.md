@@ -1,5 +1,5 @@
 <<<<<<< HEAD
-# EventBJ
+# MyMood
 
 Application mobile Flutter + Firebase pour découvrir les événements au Bénin et acheter des tickets via Mobile Money.
 
@@ -43,7 +43,7 @@ Voir `INSTRUCTIONS_JEAN.md` et `INSTRUCTIONS_EPIPHANE.md`.
 
 Source de vérité visuelle : `DESIGN.md`.
 =======
-# eventbj
+# mymood
 
 A new Flutter project.
 

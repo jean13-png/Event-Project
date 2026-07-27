@@ -1,0 +1,17 @@
+flutter_launcher_icons:
+  image_path: "assets/images/logo_mymood.png"
+  android: "launcher_icon"
+  ios: "AppIcon"
+  min_sdk_android: 21
+  web:
+    generate: true
+    image_path: "assets/images/logo_mymood.png"
+    background_color: "#F5F4EF"
+    theme_color: "#0D3B6E"
+  windows:
+    generate: true
+    image_path: "assets/images/logo_mymood.png"
+    icon_size: 48
+  macos:
+    generate: true
+    image_path: "assets/images/logo_mymood.png"

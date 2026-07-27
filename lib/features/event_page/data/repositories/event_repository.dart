@@ -85,7 +85,7 @@ class EventRepository {
         ),
       ],
       status: 'published',
-      shareLink: 'https://eventbj.page.link/events/$id',
+      shareLink: 'https://mymood.page.link/events/$id',
     );
 
     await _events.doc(id).set({

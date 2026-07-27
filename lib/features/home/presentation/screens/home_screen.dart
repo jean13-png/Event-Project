@@ -77,7 +77,7 @@ class HomeScreen extends ConsumerWidget {
                   ),
                   const SizedBox(width: 10),
                   const Text(
-                    'EventBJ',
+                    'MyMood',
                     style: TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 18,
