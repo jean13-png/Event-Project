@@ -8,7 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/navigation/app_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/design_system.dart';
-import '../../data/onboarding_model.dart';
+import '../data/onboarding_model.dart';
 import '../providers/onboarding_providers.dart';
 
 class OnboardingScreen extends ConsumerStatefulWidget {

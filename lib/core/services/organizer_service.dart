@@ -1,11 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:io';
 import '../shared/models/event_model.dart';
 
 class OrganizerService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final FirebaseStorage _storage = FirebaseStorage.instance;
 
   CollectionReference<Map<String, dynamic>> get _eventsRef =>
       _firestore.collection('events');
@@ -26,23 +24,13 @@ class OrganizerService {
   }
 
   Future<String?> uploadPoster(File file, String eventId) async {
-    try {
-      final ref = _storage.ref().child('events/$eventId/poster.jpg');
-      await ref.putFile(file);
-      return await ref.getDownloadURL();
-    } catch (e) {
-      return null;
-    }
+    // TODO: upload vers Cloudinary ou Render API
+    return null;
   }
 
   Future<String?> uploadAdditionalImage(File file, String eventId, int index) async {
-    try {
-      final ref = _storage.ref().child('events/$eventId/photo_$index.jpg');
-      await ref.putFile(file);
-      return await ref.getDownloadURL();
-    } catch (e) {
-      return null;
-    }
+    // TODO: upload vers Cloudinary ou Render API
+    return null;
   }
 
   Future<void> updateTicketSold(String eventId, String ticketTypeName) async {

@@ -3,7 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'core/navigation/app_router.dart';
+import 'core/theme/app_colors.dart';
 import 'core/theme/app_theme.dart';
+import 'features/onboarding/presentation/providers/onboarding_providers.dart';
 import 'features/onboarding/presentation/screens/onboarding_screen.dart';
 
 class MyMoodApp extends ConsumerWidget {
@@ -36,10 +38,10 @@ class MyMoodRoot extends ConsumerWidget {
     final onboardingAsync = ref.watch(onboardingCompletedProvider);
 
     return onboardingAsync.when(
-      loading: () => const MaterialApp(
+      loading: () => MaterialApp(
         home: Scaffold(
           backgroundColor: AppColors.sand,
-          body: Center(
+          body: const Center(
             child: CircularProgressIndicator(color: AppColors.navy),
           ),
         ),
