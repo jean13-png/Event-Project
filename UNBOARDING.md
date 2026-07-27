@@ -40,3 +40,5 @@ Lounges cosy, rooftops avec vue, bars à jus ou restaurants gourmands... Découv
 Bouton d'action principal :
 
 COMMENCER (ou C'EST PARTI)
+En ba gauche  le bouton ou le lien "Passer" et à droite "Continuer " jusqu' à "Commencer, 
+Les images sont dans assets images
