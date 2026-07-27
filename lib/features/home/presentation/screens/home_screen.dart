@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/shared/models/event_model.dart';
 import '../../../../core/shared/widgets/event_card.dart';
@@ -18,26 +20,45 @@ class HomeScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: AppColors.sand,
-      body: SafeArea(
-        child: RefreshIndicator(
-          onRefresh: () async {
-            ref.invalidate(featuredEventsProvider);
-            ref.invalidate(tonightEventsProvider);
-            ref.invalidate(upcomingEventsProvider);
-          },
-          child: ListView(
-            physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-            padding: EdgeInsets.zero,
-            children: [
-              _buildHeader(context),
-              _buildSearchBar(),
-              const SizedBox(height: 22),
-              _buildFeaturedSection(featuredAsync),
-              _buildTonightSection(tonightAsync),
-              _buildUpcomingSection(upcomingAsync),
-              const SizedBox(height: 80),
-            ],
-          ),
+      body: RefreshIndicator(
+        color: AppColors.orange,
+        backgroundColor: AppColors.white,
+        onRefresh: () async {
+          ref.invalidate(featuredEventsProvider);
+          ref.invalidate(tonightEventsProvider);
+          ref.invalidate(upcomingEventsProvider);
+        },
+        child: CustomScrollView(
+          physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+          slivers: [
+            SliverToBoxAdapter(
+              child: _buildHeader(context),
+            ),
+            SliverToBoxAdapter(
+              child: _buildSearchBar(),
+            ),
+            SliverToBoxAdapter(
+              child: const SizedBox(height: 12),
+            ),
+            SliverToBoxAdapter(
+              child: _buildFeaturedSection(featuredAsync),
+            ),
+            SliverToBoxAdapter(
+              child: const SizedBox(height: 16),
+            ),
+            SliverToBoxAdapter(
+              child: _buildTonightSection(tonightAsync),
+            ),
+            SliverToBoxAdapter(
+              child: const SizedBox(height: 16),
+            ),
+            SliverToBoxAdapter(
+              child: _buildUpcomingSection(upcomingAsync),
+            ),
+            SliverToBoxAdapter(
+              child: const SizedBox(height: 80),
+            ),
+          ],
         ),
       ),
     );
@@ -46,7 +67,6 @@ class HomeScreen extends ConsumerWidget {
   Widget _buildHeader(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(20, 18, 20, 24),
       decoration: const BoxDecoration(
         color: AppColors.navy,
         borderRadius: BorderRadius.only(
@@ -54,82 +74,139 @@ class HomeScreen extends ConsumerWidget {
           bottomRight: Radius.circular(24),
         ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Stack(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    width: 32,
-                    height: 32,
-                    decoration: const BoxDecoration(
-                      color: AppColors.orange,
-                      borderRadius: BorderRadius.all(Radius.circular(9)),
-                    ),
-                    child: const Icon(
-                      Icons.calendar_today_outlined,
-                      color: AppColors.white,
-                      size: 18,
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  const Text(
-                    'MyMood',
-                    style: TextStyle(
-                      fontFamily: 'Inter',
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.white,
-                      letterSpacing: -0.3,
-                    ),
-                  ),
-                ],
+          // DESIGN.md: Anneau circulaire semi-transparent en blanc (opacité 6%) en haut à droite
+          Positioned(
+            top: -40,
+            right: -30,
+            child: Container(
+              width: 140,
+              height: 140,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.white.withValues(alpha: 0.06), width: 24),
               ),
-              Row(
-                children: [
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.notifications_outlined,
-                      color: AppColors.white,
-                      size: 22,
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.person_outlined,
-                      color: AppColors.white,
-                      size: 22,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          const SizedBox(height: 18),
-          const Text(
-            'Bonjour',
-            style: TextStyle(
-              fontFamily: 'Inter',
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-              color: AppColors.white,
-              height: 1.3,
             ),
           ),
-          const SizedBox(height: 4),
-          Text(
-            'Découvre les événements près de toi',
-            style: TextStyle(
-              fontFamily: 'Inter',
-              fontSize: 14,
-              fontWeight: FontWeight.w400,
-              color: AppColors.white.withValues(alpha: 0.8),
-              height: 1.5,
+          // DESIGN.md: Bulle orange (opacité 18%) en bas à droite
+          Positioned(
+            bottom: 30,
+            right: -20,
+            child: Container(
+              width: 80,
+              height: 80,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: AppColors.orange.withValues(alpha: 0.18),
+              ),
+            ),
+          ),
+          // DESIGN.md: Forme géométrique blanc très transparent en bas à gauche
+          Positioned(
+            bottom: -20,
+            left: -20,
+            child: Transform.rotate(
+              angle: 0.8,
+              child: Container(
+                width: 90,
+                height: 90,
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.04),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+            ),
+          ),
+          // Content
+          SafeArea(
+            bottom: false,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 48), // Padding bottom for search bar overlap
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            width: 34,
+                            height: 34,
+                            decoration: BoxDecoration(
+                              color: AppColors.orange,
+                              borderRadius: BorderRadius.circular(9),
+                            ),
+                            child: const Icon(
+                              TablerIcons.calendar_event,
+                              color: AppColors.white,
+                              size: 20,
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Text(
+                            'MyMood',
+                            style: GoogleFonts.inter(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.white,
+                              letterSpacing: -0.3,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          IconButton(
+                            onPressed: () {},
+                            icon: const Icon(
+                              TablerIcons.bell,
+                              color: AppColors.white,
+                              size: 22,
+                            ),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(left: 4),
+                            width: 36,
+                            height: 36,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: AppColors.white.withValues(alpha: 0.1),
+                            ),
+                            child: const Icon(
+                              TablerIcons.user,
+                              color: AppColors.white,
+                              size: 18,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
+                  Text(
+                    'Bonjour, prêt à sortir ?',
+                    style: GoogleFonts.inter(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.white,
+                      letterSpacing: -0.5,
+                      height: 1.2,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    'Découvrez les meilleurs spots et événements du Bénin.',
+                    style: GoogleFonts.inter(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.white.withValues(alpha: 0.8),
+                      height: 1.5,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
@@ -141,58 +218,59 @@ class HomeScreen extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Transform.translate(
-        offset: const Offset(0, -20),
+        offset: const Offset(0, -26), // Overlaps header as per DESIGN.md
         child: Container(
-          height: 52,
+          height: 54,
           decoration: BoxDecoration(
             color: AppColors.white,
             borderRadius: BorderRadius.circular(16),
             boxShadow: const [
               BoxShadow(
-                color: Color(0x140D3B6E),
+                color: Color(0x140D3B6E), // 8% opacity navy
                 offset: Offset(0, 4),
                 blurRadius: 20,
-                spreadRadius: 0,
               ),
             ],
           ),
           child: TextField(
+            style: GoogleFonts.inter(fontSize: 14, color: AppColors.ink),
             decoration: InputDecoration(
               hintText: 'Rechercher un événement, un lieu...',
-              hintStyle: const TextStyle(
-                fontFamily: 'Inter',
+              hintStyle: GoogleFonts.inter(
                 fontSize: 14,
                 color: AppColors.muted,
               ),
               prefixIcon: const Padding(
-                padding: EdgeInsets.only(left: 16, right: 8),
+                padding: EdgeInsets.only(left: 18, right: 10),
                 child: Icon(
-                  Icons.search_outlined,
+                  TablerIcons.search,
                   color: AppColors.muted,
                   size: 20,
                 ),
               ),
-              suffixIcon: Container(
-                margin: const EdgeInsets.only(right: 8),
-                width: 36,
-                height: 36,
-                decoration: const BoxDecoration(
-                  color: AppColors.navy,
-                  borderRadius: BorderRadius.all(Radius.circular(9)),
-                ),
-                child: IconButton(
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.tune_outlined,
-                    color: AppColors.white,
-                    size: 18,
+              prefixIconConstraints: const BoxConstraints(minWidth: 40),
+              suffixIcon: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  width: 38,
+                  height: 38,
+                  decoration: BoxDecoration(
+                    color: AppColors.navy,
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(),
+                  child: IconButton(
+                    onPressed: () {},
+                    icon: const Icon(
+                      TablerIcons.adjustments_horizontal,
+                      color: AppColors.white,
+                      size: 18,
+                    ),
+                    padding: EdgeInsets.zero,
+                  ),
                 ),
               ),
               border: InputBorder.none,
-              contentPadding: const EdgeInsets.symmetric(horizontal: 4, vertical: 14),
+              contentPadding: const EdgeInsets.symmetric(vertical: 16),
             ),
           ),
         ),
@@ -209,19 +287,20 @@ class HomeScreen extends ConsumerWidget {
           onSeeAll: null,
         ),
         SizedBox(
-          height: 240,
+          height: 250, // Slightly taller for premium feel
           child: async.when(
             loading: () => const Center(child: CircularProgressIndicator(color: AppColors.navy)),
-            error: (e, _) => Center(child: Text('Erreur: $e', style: const TextStyle(color: AppColors.muted))),
+            error: (e, _) => Center(child: Text('Erreur: $e', style: GoogleFonts.inter(color: AppColors.muted))),
             data: (events) {
               if (events.isEmpty) return const SizedBox.shrink();
               return ListView.builder(
                 scrollDirection: Axis.horizontal,
+                physics: const BouncingScrollPhysics(),
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 itemCount: events.length,
                 itemBuilder: (context, index) {
                   return Padding(
-                    padding: EdgeInsets.only(right: index < events.length - 1 ? 14 : 20),
+                    padding: EdgeInsets.only(right: index < events.length - 1 ? 16 : 0),
                     child: HeroCard(event: events[index]),
                   );
                 },
@@ -242,29 +321,41 @@ class HomeScreen extends ConsumerWidget {
           onSeeAll: null,
         ),
         SizedBox(
-          height: 140,
+          height: 145, // Fixed height for EventCard
           child: async.when(
             loading: () => const Center(child: CircularProgressIndicator(color: AppColors.navy)),
-            error: (e, _) => Center(child: Text('Erreur: $e', style: const TextStyle(color: AppColors.muted))),
+            error: (e, _) => Center(child: Text('Erreur: $e', style: GoogleFonts.inter(color: AppColors.muted))),
             data: (events) {
               if (events.isEmpty) {
-                return const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: Text(
-                    'Aucun événement ce soir',
-                    style: TextStyle(fontFamily: 'Inter', fontSize: 14, color: AppColors.muted),
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: AppColors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: const [BoxShadow(color: Color(0x140D3B6E), blurRadius: 20, offset: Offset(0, 4))],
+                    ),
+                    child: Center(
+                      child: Text(
+                        'Aucun événement prévu ce soir. Reposez-vous bien !',
+                        style: GoogleFonts.inter(fontSize: 13, color: AppColors.muted),
+                      ),
+                    ),
                   ),
                 );
               }
               return ListView.builder(
                 scrollDirection: Axis.horizontal,
+                physics: const BouncingScrollPhysics(),
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 itemCount: events.length,
                 itemBuilder: (context, index) {
                   return SizedBox(
-                    width: 280,
+                    width: 290,
                     child: Padding(
-                      padding: EdgeInsets.only(right: index < events.length - 1 ? 12 : 20),
+                      padding: EdgeInsets.only(right: index < events.length - 1 ? 14 : 0),
                       child: EventCard(event: events[index]),
                     ),
                   );
@@ -286,31 +377,34 @@ class HomeScreen extends ConsumerWidget {
           onSeeAll: null,
         ),
         async.when(
-          loading: () => const Center(child: CircularProgressIndicator(color: AppColors.navy)),
-          error: (e, _) => Center(child: Text('Erreur: $e', style: const TextStyle(color: AppColors.muted))),
+          loading: () => const Padding(
+            padding: EdgeInsets.all(40),
+            child: Center(child: CircularProgressIndicator(color: AppColors.navy)),
+          ),
+          error: (e, _) => Center(child: Text('Erreur: $e', style: GoogleFonts.inter(color: AppColors.muted))),
           data: (events) {
             if (events.isEmpty) {
-              return const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                child: Text(
-                  'Aucun événement à venir',
-                  style: TextStyle(fontFamily: 'Inter', fontSize: 14, color: AppColors.muted),
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                child: Center(
+                  child: Text(
+                    'La programmation arrive bientôt.',
+                    style: GoogleFonts.inter(fontSize: 14, color: AppColors.muted),
+                  ),
                 ),
               );
             }
-            return Column(
-              children: events
-                  .asMap()
-                  .entries
-                  .map((entry) => Padding(
-                        padding: EdgeInsets.only(
-                          left: 20,
-                          right: 20,
-                          bottom: entry.key < events.length - 1 ? 12 : 20,
-                        ),
-                        child: EventCard(event: entry.value),
-                      ))
-                  .toList(),
+            return ListView.builder(
+              shrinkWrap: true, // Needed because it's inside CustomScrollView
+              physics: const NeverScrollableScrollPhysics(),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              itemCount: events.length,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: EdgeInsets.only(bottom: index < events.length - 1 ? 14 : 0),
+                  child: EventCard(event: events[index]),
+                );
+              },
             );
           },
         ),
@@ -318,3 +412,4 @@ class HomeScreen extends ConsumerWidget {
     );
   }
 }
+
