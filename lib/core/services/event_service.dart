@@ -96,4 +96,49 @@ class EventService {
         .snapshots()
         .map((snap) => snap.docs.map(EventModel.fromFirestore).toList());
   }
+
+  Stream<List<EventModel>> watchExplore({
+    String? category,
+    String? cityQuery,
+    bool? onlyFree,
+    bool? onlyPaid,
+    String? textQuery,
+  }) {
+    var query = _eventsRef
+        .where('status', isEqualTo: 'published')
+        .where('date', isGreaterThanOrEqualTo: Timestamp.now())
+        .orderBy('date');
+
+    if (category != null && category.isNotEmpty) {
+      query = query.where('category', isEqualTo: category);
+    }
+
+    return query.snapshots().map((snap) {
+      var events = snap.docs.map(EventModel.fromFirestore).toList();
+
+      final text = textQuery?.trim().toLowerCase();
+      if (text != null && text.isNotEmpty) {
+        events = events
+            .where((e) =>
+                e.title.toLowerCase().contains(text) ||
+                e.location.toLowerCase().contains(text))
+            .toList();
+      }
+
+      final city = cityQuery?.trim().toLowerCase();
+      if (city != null && city.isNotEmpty) {
+        events = events
+            .where((e) => e.location.toLowerCase().contains(city))
+            .toList();
+      }
+
+      if (onlyFree == true) {
+        events = events.where((e) => !e.isPaid).toList();
+      } else if (onlyPaid == true) {
+        events = events.where((e) => e.isPaid).toList();
+      }
+
+      return events;
+    });
+  }
 }
