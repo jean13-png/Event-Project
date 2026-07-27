@@ -23,7 +23,6 @@ class PaymentSession {
   final List<String> ticketIds;
 }
 
-/// Paiement via Cloud Functions (FedaPay). Jamais d'appel API direct.
 class PaymentService {
   PaymentService({
     FirebaseFunctions? functions,
@@ -38,8 +37,6 @@ class PaymentService {
   final WalletRepository _wallets;
   final _uuid = const Uuid();
 
-  /// Crée une session de paiement côté serveur.
-  /// Si la Cloud Function n'est pas déployée → mode simulation (dev).
   Future<PaymentSession> createPaymentSession({
     required String eventId,
     required String ticketType,
@@ -57,8 +54,7 @@ class PaymentService {
     );
 
     if (amount == 0) {
-      // Gratuit : émet le ticket tout de suite
-      await _fulfillPurchase(
+      final ticketIds = await _fulfillPurchase(
         eventId: eventId,
         ticketType: ticketType,
         quantity: quantity,
@@ -104,7 +100,6 @@ class PaymentService {
         e,
         st,
       );
-      // Dev fallback : simule un paiement réussi
       final ticketIds = await _fulfillPurchase(
         eventId: eventId,
         ticketType: ticketType,
@@ -128,7 +123,7 @@ class PaymentService {
     final uri = Uri.parse(url);
     AppLog.info('Ouverture checkout $url');
     if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
-      throw StateError('Impossible d’ouvrir $url');
+      throw StateError('Impossible d\'ouvrir $url');
     }
   }
 
@@ -158,7 +153,6 @@ class PaymentService {
     }
 
     if (unitPrice > 0) {
-      // Commission différée : pour l'instant 100% crédité (à ajuster plus tard)
       await _wallets.creditWallet(
         organizerId: organizerId,
         amount: unitPrice * quantity,
