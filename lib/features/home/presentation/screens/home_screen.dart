@@ -31,9 +31,9 @@ class HomeScreen extends ConsumerWidget {
           child: CustomScrollView(
             physics: const BouncingScrollPhysics(),
             slivers: [
-              _Header(),
-              _SearchBar(),
-              _SectionTitle(title: 'À la une', onSeeAll: () {}),
+              SliverToBoxAdapter(child: _Header()),
+              SliverToBoxAdapter(child: _SearchBar()),
+              SliverToBoxAdapter(child: _SectionTitle(title: 'À la une', onSeeAll: () {})),
               SliverToBoxAdapter(
                 child: SizedBox(
                   height: 210,
@@ -44,7 +44,7 @@ class HomeScreen extends ConsumerWidget {
                   ),
                 ),
               ),
-              _SectionTitle(title: 'Ce soir', onSeeAll: () {}),
+              SliverToBoxAdapter(child: _SectionTitle(title: 'Ce soir', onSeeAll: () {})),
               SliverToBoxAdapter(
                 child: tonightAsync.when(
                   loading: () => const SizedBox(height: 120, child: Center(child: CircularProgressIndicator(color: AppColors.navy))),
@@ -73,14 +73,14 @@ class HomeScreen extends ConsumerWidget {
                   },
                 ),
               ),
-              _SectionTitle(title: 'Tes événements', onSeeAll: () {}),
+              SliverToBoxAdapter(child: _SectionTitle(title: 'Tes événements', onSeeAll: () {})),
               SliverToBoxAdapter(
                 child: SizedBox(
                   height: 280,
                   child: _OrganizerList(events: organizerAsync),
                 ),
               ),
-              _SectionTitle(title: 'Prochainement', onSeeAll: () {}),
+              SliverToBoxAdapter(child: _SectionTitle(title: 'Prochainement', onSeeAll: () {})),
               SliverToBoxAdapter(
                 child: upcomingAsync.when(
                   loading: () => const SizedBox(height: 120, child: Center(child: CircularProgressIndicator(color: AppColors.navy))),

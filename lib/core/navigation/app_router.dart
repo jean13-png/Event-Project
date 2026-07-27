@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/admin/presentation/screens/admin_dashboard_screen.dart';
@@ -8,7 +7,6 @@ import '../../features/auth/presentation/screens/otp_screen.dart';
 import '../../features/event_page/presentation/screens/event_page_screen.dart';
 import '../../features/explore/presentation/screens/explore_screen.dart';
 import '../../features/home/presentation/screens/home_screen.dart';
-import '../../features/map/presentation/screens/map_screen.dart';
 import '../../features/notifications/presentation/screens/notifications_screen.dart';
 import '../../features/payment/presentation/screens/checkout_screen.dart';
 import '../../features/payment/presentation/screens/payment_success_screen.dart';
@@ -22,8 +20,7 @@ import 'main_shell.dart';
 abstract final class AppRoutes {
   static const home = '/';
   static const explore = '/explore';
-  static const map = '/map';
-  static const tickets = '/tickets';
+  static const pass = '/pass';
   static const profile = '/profile';
   static const login = '/login';
   static const otp = '/otp';
@@ -69,15 +66,7 @@ final GoRouter appRouter = GoRouter(
         StatefulShellBranch(
           routes: [
             GoRoute(
-              path: AppRoutes.map,
-              builder: (context, state) => const MapScreen(),
-            ),
-          ],
-        ),
-        StatefulShellBranch(
-          routes: [
-            GoRoute(
-              path: AppRoutes.tickets,
+              path: AppRoutes.pass,
               builder: (context, state) => const TicketsScreen(),
             ),
           ],
@@ -154,12 +143,3 @@ final GoRouter appRouter = GoRouter(
     ),
   ),
 );
-
-/// Icônes Tabler pour la bottom nav (DESIGN.md).
-abstract final class NavIcons {
-  static const home = TablerIcons.home;
-  static const explore = TablerIcons.search;
-  static const map = TablerIcons.map_pin;
-  static const tickets = TablerIcons.ticket;
-  static const profile = TablerIcons.user_circle;
-}
