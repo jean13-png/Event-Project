@@ -20,12 +20,10 @@ class OnboardingScreen extends ConsumerWidget {
       body: Column(
         children: [
           Expanded(
-            child: Center(
-              child: Image.asset(
-                slides[0].imagePath,
-                fit: BoxFit.contain,
-                width: MediaQuery.of(context).size.width,
-              ),
+            child: Image.asset(
+              slides[0].imagePath,
+              fit: BoxFit.contain,
+              width: double.infinity,
             ),
           ),
           Padding(
