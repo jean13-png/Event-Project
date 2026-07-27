@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -35,30 +36,47 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final tonightAsync = ref.watch(tonightEventsProvider);
     final upcomingAsync = ref.watch(upcomingEventsProvider);
 
-    return Scaffold(
-      backgroundColor: AppColors.sand,
-      body: RefreshIndicator(
-        color: AppColors.orange,
-        backgroundColor: AppColors.white,
-        onRefresh: () async {
-          ref.invalidate(featuredEventsProvider);
-          ref.invalidate(tonightEventsProvider);
-          ref.invalidate(upcomingEventsProvider);
-        },
-        child: CustomScrollView(
-          physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-          slivers: [
-            SliverToBoxAdapter(child: _buildHeader(context)),
-            SliverToBoxAdapter(child: _buildCategoryFilters()),
-            SliverToBoxAdapter(child: const SizedBox(height: 16)),
-            SliverToBoxAdapter(child: _buildFeaturedSection(featuredAsync)),
-            SliverToBoxAdapter(child: const SizedBox(height: 24)),
-            SliverToBoxAdapter(child: _buildTonightSection(tonightAsync)),
-            SliverToBoxAdapter(child: const SizedBox(height: 32)),
-            SliverToBoxAdapter(child: _buildOrganizerPromoBanner()),
-            SliverToBoxAdapter(child: const SizedBox(height: 32)),
-            SliverToBoxAdapter(child: _buildUpcomingSection(upcomingAsync)),
-            SliverToBoxAdapter(child: const SizedBox(height: 100)),
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle.light.copyWith(
+        statusBarColor: Colors.transparent,
+      ),
+      child: Scaffold(
+        backgroundColor: AppColors.sand,
+        body: Stack(
+          children: [
+            // Fixes the white gap on overscroll by providing a navy background at the very top
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              height: 300,
+              child: Container(color: AppColors.navy),
+            ),
+            RefreshIndicator(
+              color: AppColors.orange,
+              backgroundColor: AppColors.white,
+              onRefresh: () async {
+                ref.invalidate(featuredEventsProvider);
+                ref.invalidate(tonightEventsProvider);
+                ref.invalidate(upcomingEventsProvider);
+              },
+              child: CustomScrollView(
+                physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+                slivers: [
+                  SliverToBoxAdapter(child: _buildHeader(context)),
+                  SliverToBoxAdapter(child: _buildCategoryFilters()),
+                  SliverToBoxAdapter(child: const SizedBox(height: 16)),
+                  SliverToBoxAdapter(child: _buildFeaturedSection(featuredAsync)),
+                  SliverToBoxAdapter(child: const SizedBox(height: 24)),
+                  SliverToBoxAdapter(child: _buildTonightSection(tonightAsync)),
+                  SliverToBoxAdapter(child: const SizedBox(height: 32)),
+                  SliverToBoxAdapter(child: _buildOrganizerPromoBanner()),
+                  SliverToBoxAdapter(child: const SizedBox(height: 32)),
+                  SliverToBoxAdapter(child: _buildUpcomingSection(upcomingAsync)),
+                  SliverToBoxAdapter(child: const SizedBox(height: 100)),
+                ],
+              ),
+            ),
           ],
         ),
       ),
@@ -139,7 +157,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Position actuelle',
+                          'Bienvenue sur MyMood',
                           style: GoogleFonts.inter(
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
@@ -147,21 +165,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           ),
                         ),
                         const SizedBox(height: 4),
-                        Row(
-                          children: [
-                            const Icon(TablerIcons.map_pin_filled, color: AppColors.orange, size: 16),
-                            const SizedBox(width: 6),
-                            Text(
-                              'Cotonou, Bénin',
-                              style: GoogleFonts.inter(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: AppColors.white,
-                              ),
-                            ),
-                            const SizedBox(width: 4),
-                            const Icon(TablerIcons.chevron_down, color: AppColors.white, size: 16),
-                          ],
+                        Text(
+                          'Prêt à vibrer ?',
+                          style: GoogleFonts.inter(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.white,
+                          ),
                         ),
                       ],
                     ),

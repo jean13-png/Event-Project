@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:go_router/go_router.dart';
@@ -18,47 +19,52 @@ class TicketsScreen extends ConsumerWidget {
     final user = FirebaseAuth.instance.currentUser;
     
     if (user == null) {
-      return Scaffold(
-        backgroundColor: AppColors.sand,
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(24),
-                decoration: BoxDecoration(
-                  color: AppColors.white,
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColors.navy.withValues(alpha: 0.08),
-                      blurRadius: 24,
-                      offset: const Offset(0, 8),
-                    )
-                  ],
+      return AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle.dark.copyWith(
+          statusBarColor: Colors.transparent,
+        ),
+        child: Scaffold(
+          backgroundColor: AppColors.sand,
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    color: AppColors.white,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.navy.withValues(alpha: 0.08),
+                        blurRadius: 24,
+                        offset: const Offset(0, 8),
+                      )
+                    ],
+                  ),
+                  child: const Icon(TablerIcons.ticket, size: 48, color: AppColors.navy),
                 ),
-                child: const Icon(TablerIcons.ticket, size: 48, color: AppColors.navy),
-              ),
-              const SizedBox(height: 24),
-              Text(
-                'Connectez-vous',
-                style: GoogleFonts.inter(fontSize: 20, fontWeight: FontWeight.w600, color: AppColors.ink),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Connectez-vous pour voir\net gérer vos billets.',
-                textAlign: TextAlign.center,
-                style: GoogleFonts.inter(fontSize: 14, color: AppColors.muted, height: 1.5),
-              ),
-              const SizedBox(height: 24),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 40),
-                child: AppCtaButton(
-                  label: 'Se connecter',
-                  onPressed: () => context.push('/login'),
+                const SizedBox(height: 24),
+                Text(
+                  'Connectez-vous',
+                  style: GoogleFonts.inter(fontSize: 20, fontWeight: FontWeight.w600, color: AppColors.ink),
                 ),
-              ),
-            ],
+                const SizedBox(height: 8),
+                Text(
+                  'Connectez-vous pour voir\net gérer vos billets.',
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.inter(fontSize: 14, color: AppColors.muted, height: 1.5),
+                ),
+                const SizedBox(height: 24),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 40),
+                  child: AppCtaButton(
+                    label: 'Se connecter',
+                    onPressed: () => context.push('/login'),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       );
@@ -66,61 +72,78 @@ class TicketsScreen extends ConsumerWidget {
 
     final ticketsAsync = ref.watch(buyerTicketsProvider(user.uid));
 
-    return Scaffold(
-      backgroundColor: AppColors.sand,
-      body: CustomScrollView(
-        physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-        slivers: [
-          SliverToBoxAdapter(
-            child: _buildHeader(),
-          ),
-          SliverPadding(
-            padding: const EdgeInsets.fromLTRB(20, 24, 20, 100),
-            sliver: ticketsAsync.when(
-              loading: () => const SliverFillRemaining(
-                child: Center(child: CircularProgressIndicator(color: AppColors.navy)),
-              ),
-              error: (e, _) => SliverFillRemaining(
-                child: Center(child: Text('Erreur: $e', style: GoogleFonts.inter(color: AppColors.muted))),
-              ),
-              data: (tickets) {
-                if (tickets.isEmpty) {
-                  return SliverFillRemaining(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(TablerIcons.ticket_off, size: 48, color: AppColors.muted),
-                        const SizedBox(height: 16),
-                        Text(
-                          'Aucun billet',
-                          style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.w600, color: AppColors.ink),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          'Vous n\'avez pas encore acheté\nde billets pour un événement.',
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.inter(fontSize: 14, color: AppColors.muted, height: 1.5),
-                        ),
-                      ],
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle.light.copyWith(
+        statusBarColor: Colors.transparent,
+      ),
+      child: Scaffold(
+        backgroundColor: AppColors.sand,
+        body: Stack(
+          children: [
+            // Fixes white gap on overscroll by adding navy at the very top
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              height: 300,
+              child: Container(color: AppColors.navy),
+            ),
+            CustomScrollView(
+              physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+              slivers: [
+                SliverToBoxAdapter(
+                  child: _buildHeader(),
+                ),
+                SliverPadding(
+                  padding: const EdgeInsets.fromLTRB(20, 24, 20, 100),
+                  sliver: ticketsAsync.when(
+                    loading: () => const SliverFillRemaining(
+                      child: Center(child: CircularProgressIndicator(color: AppColors.navy)),
                     ),
-                  );
-                }
-                return SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      final ticket = tickets[index];
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 20),
-                        child: _TicketCard(ticket: ticket),
+                    error: (e, _) => SliverFillRemaining(
+                      child: Center(child: Text('Erreur: $e', style: GoogleFonts.inter(color: AppColors.muted))),
+                    ),
+                    data: (tickets) {
+                      if (tickets.isEmpty) {
+                        return SliverFillRemaining(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(TablerIcons.ticket_off, size: 48, color: AppColors.muted),
+                              const SizedBox(height: 16),
+                              Text(
+                                'Aucun billet',
+                                style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.w600, color: AppColors.ink),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                'Vous n\'avez pas encore acheté\nde billets pour un événement.',
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.inter(fontSize: 14, color: AppColors.muted, height: 1.5),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
+                      return SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          (context, index) {
+                            final ticket = tickets[index];
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 20),
+                              child: _TicketCard(ticket: ticket),
+                            );
+                          },
+                          childCount: tickets.length,
+                        ),
                       );
                     },
-                    childCount: tickets.length,
                   ),
-                );
-              },
+                ),
+              ],
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

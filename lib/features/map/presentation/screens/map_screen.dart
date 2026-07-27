@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -9,16 +10,20 @@ class MapScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF0EAE1), // Fake map ground color
-      body: Stack(
-        children: [
-          // Background Map Pattern (Fake)
-          Positioned.fill(
-            child: Opacity(
-              opacity: 0.4,
-              child: GridView.builder(
-                physics: const NeverScrollableScrollPhysics(),
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle.dark.copyWith(
+        statusBarColor: Colors.transparent,
+      ),
+      child: Scaffold(
+        backgroundColor: const Color(0xFFF0EAE1), // Fake map ground color
+        body: Stack(
+          children: [
+            // Background Map Pattern (Fake)
+            Positioned.fill(
+              child: Opacity(
+                opacity: 0.4,
+                child: GridView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 6,
                 ),
