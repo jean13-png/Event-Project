@@ -8,63 +8,25 @@ import '../../../../core/widgets/design_system.dart';
 import '../data/onboarding_model.dart';
 import '../providers/onboarding_providers.dart';
 
-class OnboardingScreen extends ConsumerStatefulWidget {
+class OnboardingScreen extends ConsumerWidget {
   const OnboardingScreen({super.key, this.onComplete});
 
   final VoidCallback? onComplete;
 
   @override
-  ConsumerState<OnboardingScreen> createState() => _OnboardingScreenState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final pages = onboardingSlides;
 
-class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
-  final _pageController = PageController();
-  var _currentPage = 0;
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
-
-  void _next() {
-    if (_currentPage < onboardingSlides.length - 1) {
-      _pageController.nextPage(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
-    } else {
-      _finish();
-    }
-  }
-
-  Future<void> _skip() async {
-    await ref.read(onboardingServiceProvider).setCompleted();
-    widget.onComplete?.call();
-  }
-
-  Future<void> _finish() async {
-    await ref.read(onboardingServiceProvider).setCompleted();
-    widget.onComplete?.call();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return PopScope(
-      canPop: false,
-      child: Scaffold(
-        backgroundColor: AppColors.sand,
-        body: Column(
+    return Scaffold(
+      backgroundColor: AppColors.sand,
+      body: SafeArea(
+        child: Column(
           children: [
             Expanded(
               child: PageView.builder(
-                controller: _pageController,
-                itemCount: onboardingSlides.length,
-                onPageChanged: (index) {
-                  setState(() => _currentPage = index);
-                },
+                itemCount: pages.length,
                 itemBuilder: (context, index) {
-                  final slide = onboardingSlides[index];
+                  final slide = pages[index];
                   return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
                     child: Column(
@@ -110,16 +72,14 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: List.generate(
-                      onboardingSlides.length,
+                      pages.length,
                       (index) => AnimatedContainer(
                         duration: const Duration(milliseconds: 300),
                         margin: const EdgeInsets.symmetric(horizontal: 4),
-                        width: _currentPage == index ? 24 : 8,
+                        width: index == 0 ? 24 : 8,
                         height: 8,
                         decoration: BoxDecoration(
-                          color: _currentPage == index
-                              ? AppColors.navy
-                              : AppColors.muted,
+                          color: AppColors.navy,
                           borderRadius: BorderRadius.circular(4),
                         ),
                       ),
@@ -129,7 +89,10 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   Row(
                     children: [
                       TextButton(
-                        onPressed: _skip,
+                        onPressed: () async {
+                          await ref.read(onboardingServiceProvider).setCompleted();
+                          onComplete?.call();
+                        },
                         child: Text(
                           'Passer',
                           style: GoogleFonts.inter(
@@ -141,13 +104,12 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                       ),
                       const Spacer(),
                       AppCtaButton(
-                        label: _currentPage == onboardingSlides.length - 1
-                            ? 'C\'est parti'
-                            : 'Suivant',
-                        icon: _currentPage == onboardingSlides.length - 1
-                            ? TablerIcons.rocket
-                            : TablerIcons.arrow_right,
-                        onPressed: _next,
+                        label: 'Suivant',
+                        icon: TablerIcons.arrow_right,
+                        onPressed: () async {
+                          await ref.read(onboardingServiceProvider).setCompleted();
+                          onComplete?.call();
+                        },
                       ),
                     ],
                   ),
