@@ -6,15 +6,33 @@ import '../../../../core/theme/app_colors.dart';
 import '../data/onboarding_model.dart';
 import '../providers/onboarding_providers.dart';
 
-class OnboardingScreen extends ConsumerWidget {
+class OnboardingScreen extends ConsumerStatefulWidget {
   const OnboardingScreen({super.key, this.onComplete});
 
   final VoidCallback? onComplete;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<OnboardingScreen> createState() => _OnboardingScreenState();
+}
+
+class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
+  late final PageController _pageController;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController();
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final slides = onboardingSlides;
-    final pageController = PageController();
 
     return Scaffold(
       backgroundColor: AppColors.sand,
@@ -22,7 +40,7 @@ class OnboardingScreen extends ConsumerWidget {
         children: [
           Expanded(
             child: PageView.builder(
-              controller: pageController,
+              controller: _pageController,
               itemCount: slides.length,
               itemBuilder: (context, index) {
                 final slide = slides[index];
@@ -70,8 +88,8 @@ class OnboardingScreen extends ConsumerWidget {
           ),
           _BuildBottomControls(
             slides: slides,
-            pageController: pageController,
-            onComplete: onComplete,
+            pageController: _pageController,
+            onComplete: widget.onComplete,
           ),
         ],
       ),
@@ -145,6 +163,7 @@ class _BuildBottomControls extends ConsumerWidget {
                       backgroundColor: AppColors.orange,
                       foregroundColor: AppColors.white,
                       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                      minimumSize: const Size(0, 48),
                     ),
                   );
                 },
