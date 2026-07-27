@@ -1,2 +1,58 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.build/
+.buildlog
+.env
+.env.local
+.env.*
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
+.idea
+.vscode
+*.iml
+*.ipr
+*.iws
+
+# Flutter/Dart/Pub related
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+/build/
+**/doc/api/
+**/ios/Flutter/.last_build_id
+/coverage/
+
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json
+
+# Android Studio will place build artifacts here
+/android/app/debug
+/android/app/profile
+/android/app/release
+
+# LibreOffice lock files
 ~$*
 .~lock.*
+
+# Firebase
+firebase-debug.log
+firebase.json
+.firebaserc
+firebase_options_local.dart
+
+# OS
+Thumbs.db
+functions/node_modules/

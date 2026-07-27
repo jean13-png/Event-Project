@@ -1,0 +1,58 @@
+name: mymood
+description: "MyMood — agenda événementiel et billetterie du Bénin."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+  flutter_riverpod: ^3.3.2
+  go_router: ^17.3.0
+  google_fonts: ^8.2.0
+  flutter_tabler_icons: ^1.43.0
+  intl: ^0.20.3
+  shared_preferences: ^2.5.5
+  firebase_core: ^4.12.1
+  firebase_auth: ^6.5.6
+  cloud_firestore: ^6.7.1
+  firebase_messaging: ^16.4.3
+  cloud_functions: ^6.3.5
+  google_sign_in: ^7.2.0
+  qr_flutter: ^4.1.0
+  mobile_scanner: ^7.4.0
+  google_maps_flutter: ^2.7.0
+  image_picker: ^1.1.2
+  geolocator: ^14.0.3
+  permission_handler: ^12.0.3
+  csv: ^8.0.0
+  fl_chart: ^1.2.0
+  share_plus: ^13.3.0
+  cached_network_image: ^3.4.1
+  shimmer: ^3.0.0
+  url_launcher: ^6.3.1
+  uuid: ^4.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  flutter_launcher_icons: ^0.14.0
+  flutter_native_splash: ^2.4.0
+
+flutter:
+  uses-material-design: true
+  fonts:
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Inter-SemiBold.ttf
+          weight: 600
+  assets:
+    - assets/fonts/
+    - assets/images/

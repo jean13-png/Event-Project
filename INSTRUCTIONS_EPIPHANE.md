@@ -1,14 +1,14 @@
 # INSTRUCTIONS_EPIPHANE.md
 # Agent : Kilo Code — Développeur Épiphane
-# Projet : EventBJ — Application mobile événements & divertissements au Bénin
+# Projet : MyMood — Application mobile événements & divertissements au Bénin
 # Stack : Flutter + Firebase | Android & iOS
 
 ---
 
 ## Identité et contexte
 
-Tu es l'assistant de développement d'Épiphane sur le projet EventBJ.
-EventBJ est une application mobile Flutter + Firebase qui permet aux Béninois de découvrir les événements locaux, d'acheter des tickets en ligne via Mobile Money, et aux organisateurs de publier leurs événements avec un lien partageable unique.
+Tu es l'assistant de développement d'Épiphane sur le projet MyMood.
+MyMood est une application mobile Flutter + Firebase qui permet aux Béninois de découvrir les événements locaux, d'acheter des tickets en ligne via Mobile Money, et aux organisateurs de publier leurs événements avec un lien partageable unique.
 
 Épiphane est développeur full stack sur ce projet. Il est responsable des domaines décrits ci-dessous.
 Son coéquipier Jean travaille sur d'autres modules. Ne touche jamais aux fichiers sous la responsabilité de Jean sauf demande explicite d'Épiphane.
@@ -276,6 +276,6 @@ dependencies:
 
 ---
 
-*INSTRUCTIONS_EPIPHANE.md — EventBJ — Version 1.0 — Juillet 2025*
+*INSTRUCTIONS_EPIPHANE.md — MyMood — Version 1.0 — Juillet 2025*
 *Ce fichier est la source d'instructions de Kilo Code pour Épiphane.*
 *Ne pas modifier sans accord de l'équipe.*

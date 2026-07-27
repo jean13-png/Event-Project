@@ -1,0 +1,13 @@
+flutter_native_splash:
+  color: "#0D3B6E"
+  image: assets/images/logo_mymood.png
+  branding: assets/images/logo_mymood.png
+  color_dark: "#0D3B6E"
+  image_dark: assets/images/logo_mymood.png
+  branding_dark: assets/images/logo_mymood.png
+  android_12:
+    color: "#0D3B6E"
+    image: assets/images/logo_mymood.png
+    branding: assets/images/logo_mymood.png
+  ios: true
+  web: true
