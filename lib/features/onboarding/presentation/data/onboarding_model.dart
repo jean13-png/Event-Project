@@ -15,18 +15,18 @@ const onboardingSlides = [
     title: 'Bienvenue sur MyMood',
     description:
         'Explorez les meilleurs événements, adresses chill, restaurants et spots incontournables au Bénin. C\'est vous qui choisissez l\'ambiance.',
-    imagePath: 'assets/images/Images_onboarding/image écran 1.png',
+    imagePath: 'assets/images/onboarding/onboard_1.png',
   ),
   OnboardingSlide(
     title: 'Trouvez les meilleures soirées',
     description:
         'Concerts, festivals, soirées à thème ou afterworks... Ne ratez plus aucun événement vibrant au Bénin.',
-    imagePath: 'assets/images/Images_onboarding/image ecran2.png',
+    imagePath: 'assets/images/onboarding/onboard_2.png',
   ),
   OnboardingSlide(
     title: 'Détendez-vous et savourez',
     description:
         'Lounges cosy, rooftops avec vue, bars à jus ou restaurants gourmands... Découvrez les meilleurs spots pour décompresser.',
-    imagePath: 'assets/images/Images_onboarding/image écran 3.png',
+    imagePath: 'assets/images/onboarding/onboard_3.png',
   ),
 ];
