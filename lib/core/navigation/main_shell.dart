@@ -3,9 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../theme/app_colors.dart';
-import 'app_router.dart';
+import 'nav_icons.dart';
 
-/// Shell principal avec bottom navigation — DESIGN.md §8.
 class MainShell extends StatelessWidget {
   const MainShell({super.key, required this.navigationShell});
 
@@ -49,22 +48,16 @@ class MainShell extends StatelessWidget {
                   onTap: () => _onTap(1),
                 ),
                 _NavItem(
-                  icon: NavIcons.map,
-                  label: 'Carte',
+                  icon: NavIcons.pass,
+                  label: 'Pass',
                   selected: index == 2,
                   onTap: () => _onTap(2),
                 ),
                 _NavItem(
-                  icon: NavIcons.tickets,
-                  label: 'Billets',
-                  selected: index == 3,
-                  onTap: () => _onTap(3),
-                ),
-                _NavItem(
                   icon: NavIcons.profile,
                   label: 'Profil',
-                  selected: index == 4,
-                  onTap: () => _onTap(4),
+                  selected: index == 3,
+                  onTap: () => _onTap(3),
                 ),
               ],
             ),

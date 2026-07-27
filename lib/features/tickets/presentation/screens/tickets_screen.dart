@@ -30,14 +30,14 @@ class TicketsScreen extends ConsumerWidget {
                   width: 64,
                   height: 64,
                   decoration: BoxDecoration(
-                    color: AppColors.sand,
+                    color: AppColors.white,
                     borderRadius: BorderRadius.circular(16),
                   ),
-                  child: const Icon(TablerIcons.ticket, size: 32, color: AppColors.muted),
+                  child: const Icon(TablerIcons.qrcode, size: 32, color: AppColors.navy),
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'Connecte-toi pour voir tes billets',
+                  'Connecte-toi pour voir tes pass',
                   style: GoogleFonts.inter(fontSize: 14, color: AppColors.muted),
                   textAlign: TextAlign.center,
                 ),
@@ -74,7 +74,7 @@ class TicketsScreen extends ConsumerWidget {
                 const MyMoodLogo(onDark: true),
                 const Spacer(),
                 Text(
-                  'Mes billets',
+                  'Mes Pass',
                   style: GoogleFonts.inter(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
@@ -94,7 +94,7 @@ class TicketsScreen extends ConsumerWidget {
                     child: Padding(
                       padding: const EdgeInsets.all(24),
                       child: Text(
-                        'Aucun billet pour le moment.\nAchète un ticket depuis une page événement.',
+                        'Aucun pass pour le moment.\nAchète un billet depuis une page événement.',
                         textAlign: TextAlign.center,
                         style: GoogleFonts.inter(fontSize: 14, color: AppColors.muted),
                       ),
