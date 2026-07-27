@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_text_styles.dart';
-import '../../../../core/shared/widgets/event_card.dart';
 import '../../../../core/shared/widgets/category_pill.dart';
 import '../../../../core/shared/models/category_model.dart';
 import '../../../../core/shared/models/event_model.dart';
+import '../../../../core/shared/widgets/event_card.dart';
 import '../providers/explore_providers.dart';
 
 class ExploreScreen extends ConsumerWidget {
@@ -43,7 +44,12 @@ class ExploreScreen extends ConsumerWidget {
         children: [
           Text(
             'Explorer',
-            style: AppTextStyles.h2,
+            style: GoogleFonts.inter(
+              fontSize: 22,
+              fontWeight: FontWeight.w600,
+              letterSpacing: -0.3,
+              color: AppColors.ink,
+            ),
           ),
           TextButton.icon(
             onPressed: () {},
@@ -52,10 +58,9 @@ class ExploreScreen extends ConsumerWidget {
               size: 18,
               color: AppColors.navy,
             ),
-            label: const Text(
+            label: Text(
               'Filtres',
-              style: TextStyle(
-                fontFamily: 'Inter',
+              style: GoogleFonts.inter(
                 fontSize: 12,
                 fontWeight: FontWeight.w500,
                 color: AppColors.navy,
@@ -73,8 +78,7 @@ class ExploreScreen extends ConsumerWidget {
       child: TextField(
         decoration: InputDecoration(
           hintText: 'Rechercher un événement, un lieu...',
-          hintStyle: const TextStyle(
-            fontFamily: 'Inter',
+          hintStyle: GoogleFonts.inter(
             fontSize: 14,
             color: AppColors.muted,
           ),
@@ -172,7 +176,7 @@ class ExploreScreen extends ConsumerWidget {
           padding: const EdgeInsets.all(20),
           child: Text(
             'Erreur: $e',
-            style: const TextStyle(fontFamily: 'Inter', fontSize: 14, color: AppColors.muted),
+            style: GoogleFonts.inter(fontSize: 14, color: AppColors.muted),
           ),
         ),
       ),
@@ -204,15 +208,15 @@ class ExploreScreen extends ConsumerWidget {
 }
 
 class _PriceChip extends StatelessWidget {
-  final String label;
-  final bool isActive;
-  final VoidCallback onTap;
-
   const _PriceChip({
     required this.label,
     required this.isActive,
     required this.onTap,
   });
+
+  final String label;
+  final bool isActive;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -236,8 +240,7 @@ class _PriceChip extends StatelessWidget {
         ),
         child: Text(
           label,
-          style: TextStyle(
-            fontFamily: 'Inter',
+          style: GoogleFonts.inter(
             fontSize: 12,
             fontWeight: FontWeight.w500,
             color: isActive ? AppColors.white : AppColors.ink,
