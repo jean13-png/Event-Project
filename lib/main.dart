@@ -8,7 +8,6 @@ import 'core/firebase/firebase_options.dart';
 import 'core/services/auth_service.dart';
 import 'core/theme/app_colors.dart';
 import 'core/utils/app_log.dart';
-import 'features/onboarding/presentation/screens/onboarding_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
