@@ -13,15 +13,16 @@ class PaymentSession {
     required this.amount,
     this.checkoutUrl,
     this.simulated = false,
+    this.ticketIds = const [],
   });
 
   final String reference;
   final int amount;
   final String? checkoutUrl;
   final bool simulated;
+  final List<String> ticketIds;
 }
 
-/// Paiement via Cloud Functions (FedaPay). Jamais d'appel API direct.
 class PaymentService {
   PaymentService({
     FirebaseFunctions? functions,
@@ -36,8 +37,6 @@ class PaymentService {
   final WalletRepository _wallets;
   final _uuid = const Uuid();
 
-  /// Crée une session de paiement côté serveur.
-  /// Si la Cloud Function n'est pas déployée → mode simulation (dev).
   Future<PaymentSession> createPaymentSession({
     required String eventId,
     required String ticketType,
@@ -55,8 +54,7 @@ class PaymentService {
     );
 
     if (amount == 0) {
-      // Gratuit : émet le ticket tout de suite
-      await _fulfillPurchase(
+      final ticketIds = await _fulfillPurchase(
         eventId: eventId,
         ticketType: ticketType,
         quantity: quantity,
@@ -70,6 +68,7 @@ class PaymentService {
         reference: reference,
         amount: 0,
         simulated: true,
+        ticketIds: ticketIds,
       );
     }
 
@@ -93,6 +92,7 @@ class PaymentService {
         reference: data['reference'] as String? ?? reference,
         amount: amount,
         checkoutUrl: checkoutUrl,
+        ticketIds: const [],
       );
     } on FirebaseFunctionsException catch (e, st) {
       AppLog.error(
@@ -100,8 +100,7 @@ class PaymentService {
         e,
         st,
       );
-      // Dev fallback : simule un paiement réussi
-      await _fulfillPurchase(
+      final ticketIds = await _fulfillPurchase(
         eventId: eventId,
         ticketType: ticketType,
         quantity: quantity,
@@ -115,6 +114,7 @@ class PaymentService {
         reference: reference,
         amount: amount,
         simulated: true,
+        ticketIds: ticketIds,
       );
     }
   }
@@ -123,7 +123,7 @@ class PaymentService {
     final uri = Uri.parse(url);
     AppLog.info('Ouverture checkout $url');
     if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
-      throw StateError('Impossible d’ouvrir $url');
+      throw StateError('Impossible d\'ouvrir $url');
     }
   }
 
@@ -153,7 +153,6 @@ class PaymentService {
     }
 
     if (unitPrice > 0) {
-      // Commission différée : pour l'instant 100% crédité (à ajuster plus tard)
       await _wallets.creditWallet(
         organizerId: organizerId,
         amount: unitPrice * quantity,

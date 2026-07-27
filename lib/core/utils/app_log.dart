@@ -3,16 +3,16 @@ import 'package:flutter/foundation.dart';
 /// Logs visibles dans le terminal `flutter run`.
 abstract final class AppLog {
   static void info(String message) {
-    debugPrint('[EventBJ] $message');
+    debugPrint('[MyMood] $message');
   }
 
   static void error(String message, [Object? error, StackTrace? stack]) {
-    debugPrint('[EventBJ][ERROR] $message');
+    debugPrint('[MyMood][ERROR] $message');
     if (error != null) {
-      debugPrint('[EventBJ][ERROR] → $error');
+      debugPrint('[MyMood][ERROR] → $error');
     }
     if (stack != null) {
-      debugPrint('[EventBJ][ERROR] stack:\n$stack');
+      debugPrint('[MyMood][ERROR] stack:\n$stack');
     }
   }
 }

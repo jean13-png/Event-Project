@@ -10,3 +10,33 @@ Explorez les meilleurs événements, adresses chill, restaurants et spots incont
 Bouton d'action principal :SUIVANT
 
 Lien secondaire :Passer
+
+📝Écran 2 : Titre & Description
+Titre :
+
+Trouvez les meilleures soirées
+
+Description :
+
+Concerts, festivals, soirées à thème ou afterworks... Ne ratez plus aucun événement vibrant au Bénin.
+
+Bouton d'action principal :
+
+SUIVANT
+
+Lien secondaire :
+
+Passer
+
+📝 Écran 3 : Titre & Description
+Titre :
+
+Détendez-vous et savourez
+
+Description :
+
+Lounges cosy, rooftops avec vue, bars à jus ou restaurants gourmands... Découvrez les meilleurs spots pour décompresser.
+
+Bouton d'action principal :
+
+COMMENCER (ou C'EST PARTI)

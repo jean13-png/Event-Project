@@ -37,6 +37,13 @@ abstract final class AppRoutes {
 final GoRouter appRouter = GoRouter(
   initialLocation: AppRoutes.home,
   observers: [AppRouteObserver()],
+  redirect: (context, state) {
+    final adminPaths = {AppRoutes.admin};
+    if (adminPaths.contains(state.matchedLocation)) {
+      return null;
+    }
+    return null;
+  },
   routes: [
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) {
@@ -128,11 +135,13 @@ final GoRouter appRouter = GoRouter(
           builder: (context, state) {
             final eventId = state.pathParameters['eventId']!;
             final extra = state.extra as Map<String, dynamic>? ?? {};
+            final ticketIds = extra['ticketIds'] as List<dynamic>? ?? const [];
             return PaymentSuccessScreen(
               eventId: eventId,
               buyerName: extra['buyerName'] as String? ?? 'Acheteur',
               ticketName: extra['ticketName'] as String? ?? 'Ticket',
               amountXof: extra['amount'] as int? ?? 0,
+              ticketIds: ticketIds.cast<String>(),
             );
           },
         ),

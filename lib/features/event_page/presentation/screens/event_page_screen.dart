@@ -50,9 +50,7 @@ class EventPageScreen extends ConsumerWidget {
                     onPressed: () {
                       Clipboard.setData(
                         ClipboardData(
-                          text: event.shareLink.isEmpty
-                              ? 'https://eventbj.page.link/events/${event.id}'
-                              : event.shareLink,
+                          text: 'https://mymood.page.link/events/${event.id}',
                         ),
                       );
                       ScaffoldMessenger.of(context).showSnackBar(

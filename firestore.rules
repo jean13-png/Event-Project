@@ -1,0 +1,78 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function getUserRef() {
+      return /databases/$(database)/documents/users/$(request.auth.uid);
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && getUserRef().get().data.type == 'admin';
+    }
+
+    // Users collection
+    match /users/{userId} {
+      allow read: isOwner(userId);
+      allow create: isSignedIn() && isOwner(userId);
+      allow update: isOwner(userId) || isAdmin();
+      allow delete: isAdmin();
+    }
+
+    // Events collection
+    match /events/{eventId} {
+      allow read: true;
+      allow create: isSignedIn();
+      allow update: isSignedIn() && (resource.data.organizerId == request.auth.uid || isAdmin());
+      allow delete: isSignedIn() && (resource.data.organizerId == request.auth.uid || isAdmin());
+    }
+
+    // Tickets collection
+    match /tickets/{ticketId} {
+      allow read: isSignedIn() && (resource.data.buyerId == request.auth.uid || isAdmin());
+      allow create: isSignedIn();
+      allow update: isAdmin();
+      allow delete: isAdmin();
+    }
+
+    // Transactions collection
+    match /transactions/{txId} {
+      allow read: isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: false;
+      allow update: isAdmin();
+      allow delete: isAdmin();
+    }
+
+    // Wallets collection
+    match /wallets/{organizerId} {
+      allow read: isSignedIn() && (resource.data.organizerId == request.auth.uid || isAdmin());
+      allow update: false;
+      allow create: isSignedIn() && isOwner(organizerId);
+      allow delete: isAdmin();
+    }
+
+    // Withdrawals collection
+    match /withdrawals/{withdrawalId} {
+      allow read: isSignedIn() && resource.data.organizerId == request.auth.uid;
+      allow create: isSignedIn();
+      allow update: isAdmin();
+      allow delete: isAdmin();
+    }
+
+    // Notifications subcollection
+    match /users/{userId}/notifications/{notificationId} {
+      allow read: isOwner(userId);
+      allow create: isSignedIn() && isOwner(userId);
+      allow update: isOwner(userId);
+      allow delete: isOwner(userId);
+    }
+  }
+}

@@ -4,9 +4,9 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../theme/app_colors.dart';
 
-/// Logo EventBJ — DESIGN.md §1
-class EventBjLogo extends StatelessWidget {
-  const EventBjLogo({
+/// Logo MyMood — DESIGN.md §1
+class MyMoodLogo extends StatelessWidget {
+  const MyMoodLogo({
     super.key,
     this.onDark = true,
     this.showName = true,
@@ -39,7 +39,7 @@ class EventBjLogo extends StatelessWidget {
         if (showName) ...[
           const SizedBox(width: 8),
           Text(
-            'EventBJ',
+            'MyMood',
             style: GoogleFonts.inter(
               fontSize: 16,
               fontWeight: FontWeight.w600,

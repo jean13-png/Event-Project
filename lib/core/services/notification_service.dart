@@ -89,7 +89,7 @@ class NotificationService {
 
   Future<void> seedDemoNotification(String userId) async {
     await _db.collection('users').doc(userId).collection('notifications').add({
-      'title': 'Bienvenue sur EventBJ',
+      'title': 'Bienvenue sur MyMood',
       'body': 'Tes alertes de ventes et rappels apparaîtront ici.',
       'read': false,
       'createdAt': FieldValue.serverTimestamp(),

@@ -29,7 +29,7 @@ class ProfileScreen extends ConsumerWidget {
                 padding: const EdgeInsets.fromLTRB(20, 12, 12, 20),
                 child: Row(
                   children: [
-                    const EventBjLogo(onDark: true),
+                    const MyMoodLogo(onDark: true),
                     const Spacer(),
                     IconButton(
                       tooltip: 'Notifications',
