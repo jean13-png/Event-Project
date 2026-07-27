@@ -95,6 +95,7 @@ class _BuildBottomControls extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 0, 24, 40),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Row(
             children: [
