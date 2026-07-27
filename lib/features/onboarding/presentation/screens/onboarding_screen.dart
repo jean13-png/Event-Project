@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
-import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../../../core/navigation/app_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/design_system.dart';
 import '../data/onboarding_model.dart';
 import '../providers/onboarding_providers.dart';
 
 class OnboardingScreen extends ConsumerStatefulWidget {
-  const OnboardingScreen({super.key});
+  const OnboardingScreen({super.key, this.onComplete});
+
+  final VoidCallback? onComplete;
 
   @override
   ConsumerState<OnboardingScreen> createState() => _OnboardingScreenState();
@@ -42,14 +42,14 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   Future<void> _skip() async {
     await ref.read(onboardingServiceProvider).setCompleted();
     if (mounted) {
-      context.go(AppRoutes.home);
+      widget.onComplete?.call();
     }
   }
 
   Future<void> _finish() async {
     await ref.read(onboardingServiceProvider).setCompleted();
     if (mounted) {
-      context.go(AppRoutes.home);
+      widget.onComplete?.call();
     }
   }
 
