@@ -39,4 +39,4 @@ Lounges cosy, rooftops avec vue, bars à jus ou restaurants gourmands... Découv
 
 Bouton d'action principal :
 
-COMMENCER (ou C'EST PARTI)
+COMMENCER (ou C'EST PARTI) 

@@ -6,9 +6,9 @@ import 'package:flutter/services.dart';
 import 'app.dart';
 import 'core/firebase/firebase_options.dart';
 import 'core/services/auth_service.dart';
-import 'core/services/dynamic_link_service.dart';
 import 'core/theme/app_colors.dart';
 import 'core/utils/app_log.dart';
+import 'features/onboarding/presentation/screens/onboarding_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,7 +37,6 @@ Future<void> main() async {
   );
   AppLog.info('Firebase initialisé (${DefaultFirebaseOptions.currentPlatform.projectId})');
   await AuthService.initializeGoogleSignIn();
-  await DynamicLinkService().init();
 
   runApp(const EventBjRoot());
   AppLog.info('App lancée — les logs [EventBJ] apparaissent ici');
