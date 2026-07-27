@@ -30,31 +30,67 @@ class MyMoodApp extends ConsumerWidget {
   }
 }
 
-class MyMoodRoot extends ConsumerWidget {
+class MyMoodRoot extends StatefulWidget {
   const MyMoodRoot({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final onboardingAsync = ref.watch(onboardingCompletedProvider);
+  State<MyMoodRoot> createState() => _MyMoodRootState();
+}
 
-    return onboardingAsync.when(
-      loading: () => MaterialApp(
-        home: Scaffold(
-          backgroundColor: AppColors.sand,
-          body: const Center(
-            child: CircularProgressIndicator(color: AppColors.navy),
-          ),
-        ),
+class _MyMoodRootState extends State<MyMoodRoot> {
+  var _onboardingComplete = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return ProviderScope(
+      child: Consumer(
+        builder: (context, ref, _) {
+          if (_onboardingComplete) {
+            return const MyMoodApp();
+          }
+
+          final onboardingAsync = ref.watch(onboardingCompletedProvider);
+
+          return onboardingAsync.when(
+            loading: () => MaterialApp(
+              home: Scaffold(
+                backgroundColor: AppColors.sand,
+                body: const Center(
+                  child: CircularProgressIndicator(color: AppColors.navy),
+                ),
+              ),
+            ),
+            error: (_, __) => const MyMoodApp(),
+            data: (completed) {
+              if (completed) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (mounted) {
+                    setState(() => _onboardingComplete = true);
+                  }
+                });
+                return MaterialApp(
+                  home: Scaffold(
+                    backgroundColor: AppColors.sand,
+                    body: const Center(
+                      child: CircularProgressIndicator(color: AppColors.navy),
+                    ),
+                  ),
+                );
+              }
+              return MaterialApp(
+                title: 'MyMood',
+                debugShowCheckedModeBanner: false,
+                theme: AppTheme.light,
+                home: OnboardingScreen(
+                  onComplete: () {
+                    setState(() => _onboardingComplete = true);
+                  },
+                ),
+              );
+            },
+          );
+        },
       ),
-      error: (_, __) => const MyMoodApp(),
-      data: (completed) {
-        if (!completed) {
-          return const OnboardingScreen();
-        }
-        return const ProviderScope(
-          child: MyMoodApp(),
-        );
-      },
     );
   }
 }

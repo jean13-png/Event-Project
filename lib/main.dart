@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'app.dart';
 import 'core/firebase/firebase_options.dart';
@@ -37,6 +38,6 @@ Future<void> main() async {
   AppLog.info('Firebase initialisé (${DefaultFirebaseOptions.currentPlatform.projectId})');
   await AuthService.initializeGoogleSignIn();
 
-  runApp(const MyMoodRoot());
+  runApp(const ProviderScope(child: MyMoodRoot()));
   AppLog.info('App lancée — les logs [MyMood] apparaissent ici');
 }
