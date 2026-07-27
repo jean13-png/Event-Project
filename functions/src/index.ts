@@ -1,5 +1,5 @@
-import { onCall, HttpsFunctionCallable } from 'firebase-functions/v2/https';
-import { onDocumentWritten, FirestoreEvent } from 'firebase-functions/v2/firestore';
+import { onCall } from 'firebase-functions/v2/https';
+import { onDocumentWritten } from 'firebase-functions/v2/firestore';
 import { logger } from 'firebase-functions/v2';
 import { getFirestore } from 'firebase-admin/firestore';
 import { getAuth } from 'firebase-admin/auth';
@@ -17,7 +17,7 @@ export const createPaymentSession = onCall(
   {
     region: 'europe-west1',
     timeoutSeconds: 60,
-    memory: '256MB',
+    memory: '256MiB',
   },
   async (request) => {
     const { eventId, ticketType, quantity, amount, buyerName, buyerPhone, organizerId, paymentMethod, reference } = request.data;
@@ -74,7 +74,7 @@ export const onPaymentSuccess = onDocumentWritten(
     document: 'transactions/{txId}',
     region: 'europe-west1',
   },
-  async (event: FirestoreEvent) => {
+  async (event: any) => {
     if (!event.data?.after) return;
     const tx = event.data.after.data();
 
@@ -270,7 +270,7 @@ export const processWithdrawal = onDocumentWritten(
       logger.error('Erreur traitement retrait', error);
       await event.data.after.ref.update({
         status: 'failed',
-        error: error.message,
+        error: String(error),
       });
     }
   }

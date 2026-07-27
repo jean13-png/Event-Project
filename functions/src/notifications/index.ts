@@ -60,7 +60,7 @@ export const sendSmsTicket = onCall(
       return { success: true, message: 'SMS envoyé', data: response.data };
     } catch (error) {
       logger.error('Erreur envoi SMS', error);
-      return { success: false, message: 'Échec envoi SMS', error: error.message };
+      return { success: false, message: 'Échec envoi SMS', error: String(error) };
     }
   }
 );
