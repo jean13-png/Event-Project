@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../theme/app_colors.dart';
+import '../theme/app_text_styles.dart';
 import 'app_router.dart';
 
-/// Shell principal avec bottom navigation — DESIGN.md §8.
 class MainShell extends StatelessWidget {
   const MainShell({super.key, required this.navigationShell});
 
@@ -116,11 +115,7 @@ class _NavItem extends StatelessWidget {
               const SizedBox(height: 4),
               Text(
                 label,
-                style: GoogleFonts.inter(
-                  fontSize: 11,
-                  fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
-                  color: selected ? AppColors.navy : AppColors.navInactive,
-                ),
+                style: selected ? AppTextStyles.bottomNavActive() : AppTextStyles.bottomNavInactive(),
               ),
             ],
           ),
