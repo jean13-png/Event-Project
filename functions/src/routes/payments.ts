@@ -39,7 +39,7 @@ router.post('/create-session', requireAuth, async (req: any, res: any) => {
       metadata: { eventId, ticketType, quantity, buyerName, buyerPhone, organizerId, paymentMethod },
     });
 
-    const checkoutUrl = `https://eventbj.bj/simulate-payment?tx=${txRef.id}&ref=${reference}`;
+    const checkoutUrl = `https://mymood.bj/simulate-payment?tx=${txRef.id}&ref=${reference}`;
 
     return res.json({ success: true, transactionId: txRef.id, reference, checkoutUrl });
   } catch (err) {

@@ -31,13 +31,13 @@ Future<void> main() async {
     ),
   );
 
-  AppLog.info('Démarrage EventBJ…');
+  AppLog.info('Démarrage MyMood…');
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
   AppLog.info('Firebase initialisé (${DefaultFirebaseOptions.currentPlatform.projectId})');
   await AuthService.initializeGoogleSignIn();
 
-  runApp(const EventBjRoot());
-  AppLog.info('App lancée — les logs [EventBJ] apparaissent ici');
+  runApp(const MyMoodRoot());
+  AppLog.info('App lancée — les logs [MyMood] apparaissent ici');
 }

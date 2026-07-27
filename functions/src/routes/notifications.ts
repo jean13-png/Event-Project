@@ -44,7 +44,7 @@ router.post('/send-sms', requireAuth, async (req: any, res: any) => {
     const username = process.env.AT_USERNAME || 'sandbox';
     const apiKey = process.env.AT_API_KEY || '';
 
-    const message = `EventBJ - Ton ticket pour ${eventTitle || "l'événement"}\nNom: ${buyerName || 'Acheteur'}\nCode: ${ticketCode}\n${eventDate ? 'Date: ' + eventDate + '\n' : ''}${eventLocation ? 'Lieu: ' + eventLocation + '\n' : ''}Présente ce code à l'entrée.`;
+    const message = `MyMood - Ton ticket pour ${eventTitle || "l'événement"}\nNom: ${buyerName || 'Acheteur'}\nCode: ${ticketCode}\n${eventDate ? 'Date: ' + eventDate + '\n' : ''}${eventLocation ? 'Lieu: ' + eventLocation + '\n' : ''}Présente ce code à l'entrée.`;
 
     const response = await axios.post(
       'https://api.africastalking.com/restless/send',
@@ -52,7 +52,7 @@ router.post('/send-sms', requireAuth, async (req: any, res: any) => {
         username,
         message,
         to: phone,
-        from: 'EventBJ',
+        from: 'MyMood',
       }).toString(),
       {
         headers: {

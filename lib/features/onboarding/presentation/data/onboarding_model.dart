@@ -12,7 +12,7 @@ class OnboardingSlide {
 
 const onboardingSlides = [
   OnboardingSlide(
-    title: 'Bienvenue sur EventBJ',
+    title: 'Bienvenue sur MyMood',
     description:
         'Explorez les meilleurs événements, adresses chill, restaurants et spots incontournables au Bénin. C\'est vous qui choisissez l\'ambiance.',
     imagePath: 'assets/images/Images_onboarding/image écran 1.png',

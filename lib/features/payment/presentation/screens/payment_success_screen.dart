@@ -27,9 +27,9 @@ class PaymentSuccessScreen extends StatelessWidget {
 
   String get _qrPayload {
     if (ticketIds.isNotEmpty) {
-      return 'eventbj:ticket:${ticketIds.first}:$eventId';
+      return 'mymood:ticket:${ticketIds.first}:$eventId';
     }
-    return 'eventbj:$eventId:${buyerName.hashCode}:$ticketName:${DateTime.now().millisecondsSinceEpoch}';
+    return 'mymood:$eventId:${buyerName.hashCode}:$ticketName:${DateTime.now().millisecondsSinceEpoch}';
   }
 
   @override

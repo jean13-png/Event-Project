@@ -142,7 +142,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const EventBjLogo(onDark: false, iconSize: 32),
+            const MyMoodLogo(onDark: false, iconSize: 32),
             const SizedBox(height: 12),
             Text(
               'Tu recevras un code SMS. Les tarifs standards s’appliquent.',

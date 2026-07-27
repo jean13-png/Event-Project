@@ -1,6 +1,6 @@
-# DESIGN.md — EventBJ
+# DESIGN.md — MyMood
 
-Référence de design de l'application mobile EventBJ.  
+Référence de design de l'application mobile MyMood.  
 Ce document est la source de vérité pour toute décision visuelle sur le projet.  
 Stack : Flutter + Firebase — Android & iOS.
 
@@ -10,16 +10,16 @@ Stack : Flutter + Firebase — Android & iOS.
 
 ### Nom et positionnement
 
-**EventBJ** — L'agenda événementiel du Bénin.
+**MyMood** — L'agenda événementiel du Bénin.
 
 L'application se positionne comme une référence sérieuse, locale et accessible. Le design doit inspirer confiance, refléter la vivacité de la scène événementielle béninoise, et rester très lisible sur les écrans d'entrée de gamme courants au Bénin.
 
 ### Logo
 
-L'icône du logo est un carré aux coins arrondis (border-radius 9px) en couleur `--orange`, contenant l'icône `calendar-event` (Tabler Icons outline) en blanc. Le nom "EventBJ" s'affiche à droite, en Inter 600, couleur blanche sur fond sombre ou `--navy` sur fond clair.
+L'icône du logo est un carré aux coins arrondis (border-radius 9px) en couleur `--orange`, contenant l'icône `calendar-event` (Tabler Icons outline) en blanc. Le nom "MyMood" s'affiche à droite, en Inter 600, couleur blanche sur fond sombre ou `--navy` sur fond clair.
 
 ```
-[ 🗓 ]  EventBJ
+[ 🗓 ]  MyMood
 ```
 
 ---
@@ -263,7 +263,7 @@ Aucun fond clair pour les cartes hero. Le texte est toujours blanc sur ces fonds
 
 ## 12. Ce qui est interdit
 
-Ces éléments ne doivent jamais apparaître dans l'interface EventBJ :
+Ces éléments ne doivent jamais apparaître dans l'interface MyMood :
 
 - Dégradés (linear-gradient, radial-gradient) sur les éléments de l'interface
 - Emojis, qu'ils soient dans les textes ou les boutons
@@ -295,5 +295,5 @@ Ces éléments sont réservés aux versions futures et ne doivent pas être int�
 
 ---
 
-*DESIGN.md — EventBJ — Version 1.0 — Juillet 2025*  
+*DESIGN.md — MyMood — Version 1.0 — Juillet 2025*  
 *Ce fichier doit être mis à jour à chaque évolution validée de la charte graphique.*

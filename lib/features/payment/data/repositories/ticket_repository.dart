@@ -23,7 +23,7 @@ class TicketRepository {
     required int price,
   }) async {
     final id = _uuid.v4();
-    final qrCode = 'eventbj:$eventId:$id';
+    final qrCode = 'mymood:$eventId:$id';
     AppLog.info('Création ticket $id event=$eventId');
 
     await _tickets.doc(id).set({

@@ -1,6 +1,6 @@
 {
-    "name": "eventbj",
-    "short_name": "eventbj",
+    "name": "mymood",
+    "short_name": "mymood",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#F5F4EF",

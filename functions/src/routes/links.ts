@@ -29,8 +29,8 @@ router.post('/create', requireAuth, async (req: any, res: any) => {
       return res.status(400).json({ error: 'eventId et titre requis' });
     }
 
-    const shortLink = `https://eventbj.page.link/${eventId}`;
-    const longLink = `https://eventbj.page.link/events/${eventId}`;
+    const shortLink = `https://mymood.page.link/${eventId}`;
+    const longLink = `https://mymood.page.link/events/${eventId}`;
 
     await db.collection('events').doc(eventId).update({
       shareLink: shortLink,

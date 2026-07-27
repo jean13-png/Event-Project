@@ -70,6 +70,6 @@ class DefaultFirebaseOptions {
     messagingSenderId: '1092203992902',
     projectId: 'event-project-e6868',
     storageBucket: 'event-project-e6868.firebasestorage.app',
-    iosBundleId: 'bj.eventbj.eventBj',
+    iosBundleId: 'bj.mymood.eventBj',
   );
 }

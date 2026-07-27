@@ -1,11 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:eventbj/app.dart';
+import 'package:mymood/app.dart';
 
 void main() {
-  testWidgets('EventBJ app smoke test', (WidgetTester tester) async {
-    await tester.pumpWidget(const EventBjApp());
+  testWidgets('MyMood app smoke test', (WidgetTester tester) async {
+    await tester.pumpWidget(const MyMoodApp());
 
-    expect(find.text('EventBJ'), findsWidgets);
+    expect(find.text('MyMood'), findsWidgets);
   });
 }

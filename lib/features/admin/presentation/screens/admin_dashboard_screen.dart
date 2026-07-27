@@ -44,7 +44,7 @@ class AdminDashboardScreen extends ConsumerWidget {
                     padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
                     child: Row(
                       children: [
-                        const EventBjLogo(onDark: true),
+                        const MyMoodLogo(onDark: true),
                         const Spacer(),
                         Text(
                           'Admin',

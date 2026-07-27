@@ -46,7 +46,7 @@ app.use('/api/links', linksRouter);
 
 const port = process.env.PORT ? Number(process.env.PORT) : 3000;
 app.listen(port, () => {
-  console.log(`EventBJ API running on port ${port}`);
+  console.log(`MyMood API running on port ${port}`);
 });
 
 export { app, db, auth, messaging };

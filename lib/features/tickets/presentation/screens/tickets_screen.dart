@@ -53,7 +53,7 @@ class TicketsScreen extends ConsumerWidget {
                 padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
                 child: Row(
                   children: [
-                    const EventBjLogo(onDark: true),
+                    const MyMoodLogo(onDark: true),
                     const Spacer(),
                     Text(
                       'Mes billets',

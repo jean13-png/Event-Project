@@ -12,8 +12,8 @@ class ApiException implements Exception {
   String toString() => 'ApiException($statusCode): $message';
 }
 
-class EventBjApiClient {
-  EventBjApiClient({
+class MyMoodApiClient {
+  MyMoodApiClient({
     required this.baseUrl,
     required this.auth,
     required http.Client httpClient,

@@ -1,5 +1,5 @@
 {
-  "name": "eventbj-api",
+  "name": "mymood-api",
   "version": "1.0.0",
   "main": "src/index.js",
   "scripts": {
