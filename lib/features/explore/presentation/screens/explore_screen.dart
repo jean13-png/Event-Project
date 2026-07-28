@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../../core/navigation/app_router.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/design_system.dart';
 import '../../../../core/shared/widgets/category_pill.dart';
 import '../../../../core/shared/models/category_model.dart';
 import '../../../../core/shared/models/event_model.dart';
@@ -18,55 +22,39 @@ class ExploreScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: AppColors.sand,
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildHeader(context),
-            _buildSearchBar(ref),
-            const SizedBox(height: 18),
-            _buildCategoryFilters(ref),
-            const SizedBox(height: 12),
-            _buildPriceFilters(ref),
-            const SizedBox(height: 8),
-            Expanded(child: _buildResults(eventsAsync)),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildHeader(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 16, 20, 4),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Explorer',
-            style: GoogleFonts.inter(
-              fontSize: 22,
-              fontWeight: FontWeight.w600,
-              letterSpacing: -0.3,
-              color: AppColors.ink,
-            ),
-          ),
-          TextButton.icon(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.tune_outlined,
-              size: 18,
-              color: AppColors.navy,
-            ),
-            label: Text(
-              'Filtres',
-              style: GoogleFonts.inter(
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-                color: AppColors.navy,
+          NavyDecorHeader(
+            child: SafeArea(
+              bottom: false,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 12, 20, 18),
+                child: Row(
+                  children: [
+                    const MyMoodLogo(onDark: true),
+                    const Spacer(),
+                    IconButton(
+                      tooltip: 'Notifications',
+                      onPressed: () => context.push(AppRoutes.notifications),
+                      icon: const Icon(
+                        TablerIcons.bell,
+                        color: AppColors.white,
+                        size: 20,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
+          _buildSearchBar(ref),
+          const SizedBox(height: 18),
+          _buildCategoryFilters(ref),
+          const SizedBox(height: 12),
+          _buildPriceFilters(ref),
+          const SizedBox(height: 8),
+          Expanded(child: _buildResults(context, ref, eventsAsync)),
         ],
       ),
     );
@@ -168,7 +156,7 @@ class ExploreScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildResults(AsyncValue<List<EventModel>> async) {
+  Widget _buildResults(BuildContext context, WidgetRef ref, AsyncValue<List<EventModel>> async) {
     return async.when(
       loading: () => const Center(child: CircularProgressIndicator(color: AppColors.navy)),
       error: (e, _) => Center(
@@ -198,7 +186,17 @@ class ExploreScreen extends ConsumerWidget {
             final event = events[index];
             return Padding(
               padding: EdgeInsets.only(bottom: index < events.length - 1 ? 12 : 20),
-              child: EventCard(event: event),
+              child: Column(
+                children: [
+                  EventCard(event: event),
+                  const SizedBox(height: 8),
+                  AppCtaButton(
+                    label: event.minPrice == 0 ? 'Réserver gratuitement' : 'Participer',
+                    icon: event.minPrice == 0 ? TablerIcons.ticket : TablerIcons.arrow_right,
+                    onPressed: () => context.push('/events/${event.id}'),
+                  ),
+                ],
+              ),
             );
           },
         );

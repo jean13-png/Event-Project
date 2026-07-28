@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../core/navigation/app_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/design_system.dart';
 import '../providers/event_providers.dart';
+import '../../../auth/presentation/providers/auth_providers.dart';
 
 /// Page événement publique (lien partageable) — sans compte requis.
 class EventPageScreen extends ConsumerWidget {
@@ -20,6 +22,7 @@ class EventPageScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final eventAsync = ref.watch(eventProvider(eventId));
     final suggestionsAsync = ref.watch(eventSuggestionsProvider(eventId));
+    final authAsync = ref.watch(authStateProvider);
 
     return Scaffold(
       backgroundColor: AppColors.sand,
@@ -48,14 +51,8 @@ class EventPageScreen extends ConsumerWidget {
                     icon: const Icon(TablerIcons.share, size: 20),
                     tooltip: 'Partager',
                     onPressed: () {
-                      Clipboard.setData(
-                        ClipboardData(
-                          text: 'https://mymood.page.link/events/${event.id}',
-                        ),
-                      );
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Lien copié')),
-                      );
+                      final link = 'https://mymood.page.link/events/${event.id}';
+                      SharePlus.instance.share(ShareParams(text: '$link\n\n${event.title} — ${event.dateLabel}\nRéserve ta place maintenant sur MyMood !'));
                     },
                   ),
                 ],
@@ -298,6 +295,35 @@ class EventPageScreen extends ConsumerWidget {
                           );
                         },
                       ),
+                      if (authAsync.value == null) ...[
+                        const SizedBox(height: 26),
+                        Container(
+                          padding: const EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            color: AppColors.white,
+                            borderRadius: BorderRadius.circular(16),
+                            boxShadow: AppColors.cardShadow,
+                          ),
+                          child: Column(
+                            children: [
+                              Text('Télécharge MyMood', style: GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.ink)),
+                              const SizedBox(height: 8),
+                              Text('Réserve directement depuis l’application.', style: GoogleFonts.inter(fontSize: 13, color: AppColors.muted)),
+                              const SizedBox(height: 16),
+                              AppCtaButton(
+                                label: 'Installer l’application',
+                                icon: TablerIcons.download,
+                                onPressed: () async {
+                                  final uri = Uri.parse('https://play.google.com/store/apps/details?id=com.example.mymood');
+                                  if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+                                    if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Lien Play Store indisponible')));
+                                  }
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                 ),

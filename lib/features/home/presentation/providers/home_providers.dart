@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/services/event_service.dart';
 import '../../../../core/shared/models/event_model.dart';
+import '../../../../core/services/organizer_service.dart';
 
 final eventServiceProvider = Provider<EventService>((ref) {
   return EventService();
@@ -32,9 +33,11 @@ final mockOrganizerProvider = Provider<List<EventModel>>((ref) {
       title: 'Nuit de la mode',
       description: 'Défilé mode et networking.',
       category: 'Mode',
-      date: DateTime(now.year, now.month, day + 10, 18, 0),
-      time: const TimeOfDay(hour: 18, minute: 0),
+      categoryIcon: EventModel.iconForCategory('Mode'),
+      dateLabel: 'Sam. 16 août',
+      timeLabel: '18:00',
       location: 'Centre Culturel, Porto-Novo',
+      city: 'Porto-Novo',
       organizerId: 'organizer-1',
       tickets: [
         TicketType(name: 'Standard', price: 5000, totalQty: 200),
@@ -46,15 +49,19 @@ final mockOrganizerProvider = Provider<List<EventModel>>((ref) {
       latitude: 6.4969,
       longitude: 2.6289,
       views: 320,
+      date: DateTime(now.year, now.month, day + 10, 18, 0),
+      time: const TimeOfDay(hour: 18, minute: 0),
     ),
     EventModel(
       id: 'org-2',
       title: 'Tech Meetup BJ',
       description: 'Talks, démos et ateliers tech.',
       category: 'Tech',
-      date: DateTime(now.year, now.month, day + 14, 9, 0),
-      time: const TimeOfDay(hour: 9, minute: 0),
+      categoryIcon: EventModel.iconForCategory('Tech'),
+      dateLabel: 'Mer. 20 août',
+      timeLabel: '09:00',
       location: 'Incubateur NTIC, Cotonou',
+      city: 'Cotonou',
       organizerId: 'organizer-1',
       tickets: [
         TicketType(name: 'Gratuit', price: 0, totalQty: 120),
@@ -65,15 +72,19 @@ final mockOrganizerProvider = Provider<List<EventModel>>((ref) {
       latitude: 6.3703,
       longitude: 2.3912,
       views: 140,
+      date: DateTime(now.year, now.month, day + 14, 9, 0),
+      time: const TimeOfDay(hour: 9, minute: 0),
     ),
     EventModel(
       id: 'org-3',
       title: 'Afro Groove Live',
       description: 'Live band, DJ set et ambiance.',
       category: 'Concert',
-      date: DateTime(now.year, now.month, day + 7, 20, 30),
-      time: const TimeOfDay(hour: 20, minute: 30),
+      categoryIcon: EventModel.iconForCategory('Concert'),
+      dateLabel: 'Ven. 22 août',
+      timeLabel: '20:30',
       location: 'Espace Lagoon, Cotonou',
+      city: 'Cotonou',
       organizerId: 'organizer-1',
       tickets: [
         TicketType(name: 'Standard', price: 4000, totalQty: 300),
@@ -85,6 +96,22 @@ final mockOrganizerProvider = Provider<List<EventModel>>((ref) {
       latitude: 6.3654,
       longitude: 2.4183,
       views: 510,
+      date: DateTime(now.year, now.month, day + 7, 20, 30),
+      time: const TimeOfDay(hour: 20, minute: 30),
     ),
   ];
+});
+
+final organizerServiceProvider = Provider<OrganizerService>((ref) {
+  return OrganizerService();
+});
+
+final organizerStatsProvider = StreamProvider.family<Map<String, dynamic>, String>((ref, organizerId) {
+  final service = ref.watch(organizerServiceProvider);
+  return service.getDashboardStats(organizerId);
+});
+
+final organizerEventsProvider = StreamProvider.family<List<EventModel>, String>((ref, organizerId) {
+  final service = ref.watch(eventServiceProvider);
+  return service.watchByOrganizer(organizerId);
 });
