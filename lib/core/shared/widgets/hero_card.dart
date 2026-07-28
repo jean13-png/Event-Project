@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../../theme/app_colors.dart';
 import '../../shared/models/event_model.dart';
 
@@ -19,6 +20,18 @@ class HeroCard extends StatelessWidget {
         decoration: AppColors.heroCardDecoration(background),
         child: Stack(
           children: [
+            if (_hasImage(event.imageUrl))
+              Positioned.fill(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(22),
+                  child: CachedNetworkImage(
+                    imageUrl: event.imageUrl!,
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) => Container(color: background.withValues(alpha: 0.3)),
+                    errorWidget: (context, url, error) => Container(color: background),
+                  ),
+                ),
+              ),
             Positioned(
               right: -30,
               bottom: -30,
@@ -120,6 +133,8 @@ class HeroCard extends StatelessWidget {
       ),
     );
   }
+
+  bool _hasImage(String? url) => url != null && url.isNotEmpty;
 
   Color _bgColor(String category) {
     switch (category.toLowerCase()) {
