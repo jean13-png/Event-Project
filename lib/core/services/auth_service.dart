@@ -207,7 +207,6 @@ class AuthService {
     if (user == null) return;
 
     try {
-      AppLog.info('Firestore profil uid=${user.uid}');
       final ref = _firestore.collection('users').doc(user.uid);
       final snap = await ref.get();
 
@@ -221,24 +220,31 @@ class AuthService {
           'createdAt': FieldValue.serverTimestamp(),
           'preferences': <String, dynamic>{},
         });
-        AppLog.info('Profil Firestore créé');
       } else {
         await ref.set({
           'displayName': user.displayName ?? snap.data()?['displayName'] ?? '',
           'phone': user.phoneNumber ?? snap.data()?['phone'] ?? '',
           'email': user.email ?? snap.data()?['email'] ?? '',
+          'type': type,
           'updatedAt': FieldValue.serverTimestamp(),
         }, SetOptions(merge: true));
-        AppLog.info('Profil Firestore mis à jour');
       }
     } catch (e, st) {
-      AppLog.error(
-        'Firestore profil échoué (Auth OK quand même). '
-        'Crée Firestore + règles en mode test.',
-        e,
-        st,
-      );
+      AppLog.error('Firestore profil échoué', e, st);
     }
+  }
+
+  Future<void> setUserType(String type) async {
+    final user = _auth.currentUser;
+    if (user == null) return;
+    await _firestore.collection('users').doc(user.uid).set({'type': type}, SetOptions(merge: true));
+  }
+
+  Future<String?> getUserType() async {
+    final user = _auth.currentUser;
+    if (user == null) return null;
+    final snap = await _firestore.collection('users').doc(user.uid).get();
+    return snap.data()?['type'] as String?;
   }
 
   Future<void> signOut() async {

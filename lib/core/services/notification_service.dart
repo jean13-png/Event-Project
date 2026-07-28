@@ -95,4 +95,13 @@ class NotificationService {
       'createdAt': FieldValue.serverTimestamp(),
     });
   }
+
+  Future<void> createNotification(String userId, String title, String body) async {
+    await _db.collection('users').doc(userId).collection('notifications').add({
+      'title': title,
+      'body': body,
+      'read': false,
+      'createdAt': FieldValue.serverTimestamp(),
+    });
+  }
 }

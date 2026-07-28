@@ -37,7 +37,7 @@ class EventCard extends StatelessWidget {
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        event.time.format(context),
+                        event.time?.format(context) ?? event.timeLabel,
                         style: const TextStyle(
                           fontFamily: 'Inter',
                           fontSize: 12,

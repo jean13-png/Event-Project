@@ -6,6 +6,7 @@ import 'package:uuid/uuid.dart';
 import '../../features/payment/data/repositories/ticket_repository.dart';
 import '../../features/wallet/data/repositories/wallet_repository.dart';
 import '../utils/app_log.dart';
+import '../services/notification_service.dart';
 
 class PaymentSession {
   const PaymentSession({
@@ -160,6 +161,12 @@ class PaymentService {
         title: 'Vente — $ticketType x$quantity',
       );
     }
+
+    await NotificationService().createNotification(
+      organizerId,
+      'Nouvelle vente',
+      '$buyerName a acheté $ticketType x$quantity.',
+    );
 
     AppLog.info('Achat complété tickets=${ticketIds.length}');
     return ticketIds;

@@ -110,6 +110,13 @@ class ProfileScreen extends ConsumerWidget {
                 ),
                 const SizedBox(height: 12),
                 _ProfileTile(
+                  icon: TablerIcons.calendar_event,
+                  title: 'Espace organisateur',
+                  subtitle: 'Publier et gérer tes événements',
+                  onTap: () => context.push(AppRoutes.organizer),
+                ),
+                const SizedBox(height: 12),
+                _ProfileTile(
                   icon: TablerIcons.shield,
                   title: 'Admin',
                   subtitle: 'Back-office',
