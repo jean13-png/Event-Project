@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/shared/models/event_model.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/design_system.dart';
 import '../../../../core/shared/widgets/event_card.dart';
 import '../../../../core/shared/widgets/hero_card.dart';
 import '../providers/home_providers.dart';
@@ -60,14 +62,24 @@ class HomeScreen extends ConsumerWidget {
                       children: events
                           .asMap()
                           .entries
-                          .map((entry) => Padding(
-                                padding: EdgeInsets.only(
-                                  left: 20,
-                                  right: 20,
-                                  top: entry.key == 0 ? 0 : 12,
-                                ),
-                                child: EventCard(event: entry.value),
-                              ))
+                     .map((entry) => Padding(
+                                 padding: EdgeInsets.only(
+                                   left: 20,
+                                   right: 20,
+                                   top: entry.key == 0 ? 0 : 12,
+                                 ),
+                                 child: Column(
+                                   children: [
+                                     EventCard(event: entry.value),
+                                     const SizedBox(height: 8),
+                                     AppCtaButton(
+                                       label: entry.value.minPrice == 0 ? 'Réserver gratuitement' : 'Participer',
+                                       icon: entry.value.minPrice == 0 ? TablerIcons.ticket : TablerIcons.arrow_right,
+                                       onPressed: () => context.push('/events/${entry.value.id}'),
+                                     ),
+                                   ],
+                                 ),
+                               ))
                           .toList(),
                     );
                   },
@@ -96,14 +108,24 @@ class HomeScreen extends ConsumerWidget {
                       children: events
                           .asMap()
                           .entries
-                          .map((entry) => Padding(
-                                padding: EdgeInsets.only(
-                                  left: 20,
-                                  right: 20,
-                                  bottom: entry.key < events.length - 1 ? 12 : 24,
-                                ),
-                                child: EventCard(event: entry.value),
-                              ))
+                           .map((entry) => Padding(
+                                 padding: EdgeInsets.only(
+                                   left: 20,
+                                   right: 20,
+                                   bottom: entry.key < events.length - 1 ? 12 : 24,
+                                 ),
+                                 child: Column(
+                                   children: [
+                                     EventCard(event: entry.value),
+                                     const SizedBox(height: 8),
+                                     AppCtaButton(
+                                       label: entry.value.minPrice == 0 ? 'Réserver gratuitement' : 'Participer',
+                                       icon: entry.value.minPrice == 0 ? TablerIcons.ticket : TablerIcons.arrow_right,
+                                       onPressed: () => context.push('/events/${entry.value.id}'),
+                                     ),
+                                   ],
+                                 ),
+                               ))
                           .toList(),
                     );
                   },

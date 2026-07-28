@@ -4,10 +4,14 @@ import 'package:go_router/go_router.dart';
 import '../../features/admin/presentation/screens/admin_dashboard_screen.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/auth/presentation/screens/otp_screen.dart';
+import '../../features/auth/presentation/screens/role_selection_screen.dart';
 import '../../features/event_page/presentation/screens/event_page_screen.dart';
 import '../../features/explore/presentation/screens/explore_screen.dart';
 import '../../features/home/presentation/screens/home_screen.dart';
 import '../../features/notifications/presentation/screens/notifications_screen.dart';
+import '../../features/organizer/presentation/screens/organizer_dashboard_screen.dart';
+import '../../features/organizer/presentation/screens/organizer_events_list_screen.dart';
+import '../../features/organizer/presentation/screens/organizer_event_form_screen.dart';
 import '../../features/payment/presentation/screens/checkout_screen.dart';
 import '../../features/payment/presentation/screens/payment_success_screen.dart';
 import '../../features/profile/presentation/screens/profile_screen.dart';
@@ -24,6 +28,10 @@ abstract final class AppRoutes {
   static const profile = '/profile';
   static const login = '/login';
   static const otp = '/otp';
+  static const roleSelection = '/role-selection';
+  static const organizer = '/organizer';
+  static const organizerEvents = '/organizer/events';
+  static const newEvent = '/organizer/events/new';
   static const wallet = '/wallet';
   static const withdraw = '/wallet/withdraw';
   static const notifications = '/notifications';
@@ -34,13 +42,6 @@ abstract final class AppRoutes {
 final GoRouter appRouter = GoRouter(
   initialLocation: AppRoutes.home,
   observers: [AppRouteObserver()],
-  redirect: (context, state) {
-    final adminPaths = {AppRoutes.admin};
-    if (adminPaths.contains(state.matchedLocation)) {
-      return null;
-    }
-    return null;
-  },
   routes: [
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) {
@@ -88,6 +89,22 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: AppRoutes.otp,
       builder: (context, state) => const OtpScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.roleSelection,
+      builder: (context, state) => const RoleSelectionScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.organizer,
+      builder: (context, state) => const OrganizerDashboardScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.organizerEvents,
+      builder: (context, state) => const OrganizerEventsListScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.newEvent,
+      builder: (context, state) => const OrganizerEventFormScreen(),
     ),
     GoRoute(
       path: AppRoutes.wallet,

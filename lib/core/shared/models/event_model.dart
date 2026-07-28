@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 
 enum EventStatus { draft, published, cancelled, completed }
 enum EventCategory { concert, soirtee, sport, culture, gastronomie, formation, autre }
@@ -9,9 +10,11 @@ class EventModel {
   final String title;
   final String description;
   final String category;
-  final DateTime date;
-  final TimeOfDay time;
+  final IconData categoryIcon;
+  final String dateLabel;
+  final String timeLabel;
   final String location;
+  final String city;
   final double? latitude;
   final double? longitude;
   final String organizerId;
@@ -24,15 +27,19 @@ class EventModel {
   final String? videoUrl;
   final bool isPublic;
   final DateTime createdAt;
+  final DateTime? date;
+  final TimeOfDay? time;
 
   EventModel({
     required this.id,
     required this.title,
     required this.description,
     required this.category,
-    required this.date,
-    required this.time,
+    required this.categoryIcon,
+    required this.dateLabel,
+    required this.timeLabel,
     required this.location,
+    required this.city,
     this.latitude,
     this.longitude,
     required this.organizerId,
@@ -45,21 +52,29 @@ class EventModel {
     this.videoUrl,
     this.isPublic = true,
     required this.createdAt,
+    this.date,
+    this.time,
   });
 
   factory EventModel.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
+    final date = (data['date'] as Timestamp?)?.toDate() ?? DateTime.now();
+    final time = TimeOfDay(
+      hour: (data['time'] as int?) ?? 0,
+      minute: (data['timeMinute'] as int?) ?? 0,
+    );
+    final category = data['category'] ?? 'autre';
+    final location = data['location'] ?? '';
     return EventModel(
       id: doc.id,
       title: data['title'] ?? '',
       description: data['description'] ?? '',
-      category: data['category'] ?? 'autre',
-      date: (data['date'] as Timestamp?)?.toDate() ?? DateTime.now(),
-      time: TimeOfDay(
-        hour: (data['time'] as int?) ?? 0,
-        minute: (data['timeMinute'] as int?) ?? 0,
-      ),
-      location: data['location'] ?? '',
+      category: category,
+      categoryIcon: iconForCategory(category),
+      dateLabel: formatDate(date),
+      timeLabel: formatTime(time),
+      location: location,
+      city: location.split(',').last.trim(),
       latitude: (data['latitude'] as num?)?.toDouble(),
       longitude: (data['longitude'] as num?)?.toDouble(),
       organizerId: data['organizerId'] ?? '',
@@ -80,10 +95,14 @@ class EventModel {
       videoUrl: data['videoUrl'],
       isPublic: data['isPublic'] ?? true,
       createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      date: date,
+      time: time,
     );
   }
 
   Map<String, dynamic> toFirestore() {
+    final date = this.date ?? createdAt;
+    final time = this.time ?? const TimeOfDay(hour: 0, minute: 0);
     return {
       'title': title,
       'description': description,
@@ -105,6 +124,41 @@ class EventModel {
       'isPublic': isPublic,
       'createdAt': Timestamp.fromDate(createdAt),
     };
+  }
+
+  static IconData iconForCategory(String category) {
+    switch (category.toLowerCase()) {
+      case 'concert':
+        return TablerIcons.music;
+      case 'soirée':
+        return TablerIcons.moon_stars;
+      case 'culture':
+        return TablerIcons.palette;
+      case 'gastronomie':
+        return TablerIcons.chef_hat;
+      case 'sport':
+        return TablerIcons.ball_basketball;
+      case 'formation':
+        return TablerIcons.school;
+      case 'tech':
+        return TablerIcons.device_laptop;
+      case 'mode':
+        return TablerIcons.shirt;
+      default:
+        return TablerIcons.calendar_event;
+    }
+  }
+
+  static String formatDate(DateTime date) {
+    const months = ['janv.', 'févr.', 'mars', 'avr.', 'mai', 'juin', 'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.'];
+    final weekday = ['Lun.', 'Mar.', 'Mer.', 'Jeu.', 'Ven.', 'Sam.', 'Dim.'][date.weekday - 1];
+    return '$weekday ${date.day} ${months[date.month - 1]} ${date.year}';
+  }
+
+  static String formatTime(TimeOfDay time) {
+    final hour = time.hour.toString().padLeft(2, '0');
+    final minute = time.minute.toString().padLeft(2, '0');
+    return '$hour:$minute';
   }
 
   bool get isPaid => tickets.any((t) => t.price > 0);
