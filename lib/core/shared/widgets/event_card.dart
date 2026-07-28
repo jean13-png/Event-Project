@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_text_styles.dart';
 import '../../shared/models/event_model.dart';
@@ -103,6 +104,30 @@ class EventCard extends StatelessWidget {
                 ],
               ),
             ),
+            if (_hasImage(event.imageUrl))
+              Positioned(
+                right: 8,
+                top: 8,
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: AppColors.cardShadow,
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: CachedNetworkImage(
+                      imageUrl: event.imageUrl!,
+                      width: 40,
+                      height: 40,
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) => Container(color: AppColors.sand),
+                      errorWidget: (context, url, error) => Container(color: AppColors.sand),
+                    ),
+                  ),
+                ),
+              ),
             Positioned(
               right: -20,
               bottom: -20,
@@ -117,4 +142,6 @@ class EventCard extends StatelessWidget {
       ),
     );
   }
+
+  bool _hasImage(String? url) => url != null && url.isNotEmpty;
 }

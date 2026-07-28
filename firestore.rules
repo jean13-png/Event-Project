@@ -19,9 +19,17 @@ service cloud.firestore {
       return isSignedIn() && getUserRef().get().data.type == 'admin';
     }
 
+    function isOrganizer() {
+      return isSignedIn() && getUserRef().get().data.type == 'organizer';
+    }
+
+    function isBuyer() {
+      return isSignedIn() && getUserRef().get().data.type == 'buyer';
+    }
+
     // Users collection
     match /users/{userId} {
-      allow read: isOwner(userId);
+      allow read: isOwner(userId) || isAdmin();
       allow create: isSignedIn() && isOwner(userId);
       allow update: isOwner(userId) || isAdmin();
       allow delete: isAdmin();
@@ -30,14 +38,14 @@ service cloud.firestore {
     // Events collection
     match /events/{eventId} {
       allow read: true;
-      allow create: isSignedIn();
+      allow create: isSignedIn() && isOrganizer();
       allow update: isSignedIn() && (resource.data.organizerId == request.auth.uid || isAdmin());
       allow delete: isSignedIn() && (resource.data.organizerId == request.auth.uid || isAdmin());
     }
 
     // Tickets collection
     match /tickets/{ticketId} {
-      allow read: isSignedIn() && (resource.data.buyerId == request.auth.uid || isAdmin());
+      allow read: isSignedIn() && (resource.data.buyerId == request.auth.uid || isAdmin() || resource.data.organizerId == request.auth.uid);
       allow create: isSignedIn();
       allow update: isAdmin();
       allow delete: isAdmin();
@@ -53,7 +61,7 @@ service cloud.firestore {
 
     // Wallets collection
     match /wallets/{organizerId} {
-      allow read: isSignedIn() && (resource.data.organizerId == request.auth.uid || isAdmin());
+      allow read: isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
       allow update: false;
       allow create: isSignedIn() && isOwner(organizerId);
       allow delete: isAdmin();
@@ -61,7 +69,7 @@ service cloud.firestore {
 
     // Withdrawals collection
     match /withdrawals/{withdrawalId} {
-      allow read: isSignedIn() && resource.data.organizerId == request.auth.uid;
+      allow read: isSignedIn() && resource.data.userId == request.auth.uid;
       allow create: isSignedIn();
       allow update: isAdmin();
       allow delete: isAdmin();
