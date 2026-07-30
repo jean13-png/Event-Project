@@ -1,38 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_text_styles.dart';
 import '../data/onboarding_model.dart';
-import '../providers/onboarding_providers.dart';
 
-class OnboardingScreen extends ConsumerStatefulWidget {
+class OnboardingScreen extends ConsumerWidget {
   const OnboardingScreen({super.key, this.onComplete});
 
   final VoidCallback? onComplete;
 
   @override
-  ConsumerState<OnboardingScreen> createState() => _OnboardingScreenState();
-}
-
-class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
-  late final PageController _pageController;
-
-  @override
-  void initState() {
-    super.initState();
-    _pageController = PageController();
-  }
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final slides = onboardingSlides;
+    final pageController = PageController();
 
     return Scaffold(
       backgroundColor: AppColors.sand,
@@ -40,7 +21,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         children: [
           Expanded(
             child: PageView.builder(
-              controller: _pageController,
+              controller: pageController,
               itemCount: slides.length,
               itemBuilder: (context, index) {
                 final slide = slides[index];
@@ -59,22 +40,13 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                         children: [
                           Text(
                             slide.title,
-                            style: GoogleFonts.inter(
-                              fontSize: 22,
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: -0.3,
-                              color: AppColors.ink,
-                            ),
+                            style: AppTextStyles.h2,
                             textAlign: TextAlign.center,
                           ),
                           const SizedBox(height: 12),
                           Text(
                             slide.description,
-                            style: GoogleFonts.inter(
-                              fontSize: 14,
-                              height: 1.5,
-                              color: AppColors.muted,
-                            ),
+                            style: AppTextStyles.body,
                             textAlign: TextAlign.center,
                           ),
                           const SizedBox(height: 24),
@@ -88,8 +60,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
           ),
           _BuildBottomControls(
             slides: slides,
-            pageController: _pageController,
-            onComplete: widget.onComplete,
+            pageController: pageController,
+            onComplete: onComplete,
           ),
         ],
       ),
@@ -97,7 +69,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   }
 }
 
-class _BuildBottomControls extends ConsumerWidget {
+class _BuildBottomControls extends StatelessWidget {
   const _BuildBottomControls({
     required this.slides,
     required this.pageController,
@@ -109,64 +81,44 @@ class _BuildBottomControls extends ConsumerWidget {
   final VoidCallback? onComplete;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 0, 24, 40),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               TextButton(
                 onPressed: () async {
-                  await _finish(ref);
+                  await Navigator.of(context).pushReplacementNamed('/');
+                  onComplete?.call();
                 },
                 child: Text(
                   'Passer',
-                  style: GoogleFonts.inter(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.muted,
-                  ),
+                  style: AppTextStyles.body.copyWith(color: AppColors.muted),
                 ),
               ),
-              const Spacer(),
-              AnimatedBuilder(
-                animation: pageController,
-                builder: (context, child) {
-                  double page = 0;
-                  if (pageController.hasClients && pageController.position.hasPixels) {
-                    page = pageController.page ?? 0;
+              ElevatedButton.icon(
+                onPressed: () async {
+                  final currentPage = pageController.page?.round() ?? 0;
+                  if (currentPage < slides.length - 1) {
+                    pageController.nextPage(
+                      duration: const Duration(milliseconds: 200),
+                      curve: Curves.easeInOut,
+                    );
+                  } else {
+                    await Navigator.of(context).pushReplacementNamed('/');
+                    onComplete?.call();
                   }
-                  final currentPage = page.round();
-                  return ElevatedButton.icon(
-                    onPressed: () async {
-                      if (currentPage < slides.length - 1) {
-                        pageController.nextPage(
-                          duration: const Duration(milliseconds: 200),
-                          curve: Curves.easeInOut,
-                        );
-                      } else {
-                        await _finish(ref);
-                      }
-                    },
-                    icon: Icon(Icons.arrow_forward, size: 20, color: AppColors.white),
-                    label: Text(
-                      currentPage < slides.length - 1 ? 'Suivant' : 'C\'est parti',
-                      style: GoogleFonts.inter(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.white,
-                      ),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.orange,
-                      foregroundColor: AppColors.white,
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-                      minimumSize: const Size(0, 48),
-                    ),
-                  );
                 },
+                icon: const Icon(Icons.arrow_forward, size: 20),
+                label: const Text('C\'est parti'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.orange,
+                  foregroundColor: AppColors.white,
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                ),
               ),
             ],
           ),
@@ -175,12 +127,6 @@ class _BuildBottomControls extends ConsumerWidget {
         ],
       ),
     );
-  }
-
-  Future<void> _finish(WidgetRef ref) async {
-    final repo = ref.read(onboardingServiceProvider);
-    await repo.setCompleted();
-    onComplete?.call();
   }
 }
 
@@ -193,8 +139,6 @@ class _DotsIndicator extends StatelessWidget {
   final List<OnboardingSlide> slides;
   final PageController pageController;
 
-
-
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -204,7 +148,7 @@ class _DotsIndicator extends StatelessWidget {
           animation: pageController,
           builder: (context, child) {
             double delta = 0;
-            if (pageController.hasClients && pageController.position.hasPixels) {
+            if (pageController.position.hasPixels) {
               delta = (pageController.page ?? 0) - index;
             }
             final isActive = delta.abs() < 0.5;
@@ -214,7 +158,7 @@ class _DotsIndicator extends StatelessWidget {
               height: 8,
               width: isActive ? 24 : 8,
               decoration: BoxDecoration(
-                color: isActive ? AppColors.navy : AppColors.navy.withValues(alpha: 0.15),
+                color: isActive ? AppColors.navy : const Color(0x140D3B6E),
                 borderRadius: BorderRadius.circular(8),
               ),
             );

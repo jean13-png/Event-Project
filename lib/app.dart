@@ -8,21 +8,21 @@ import 'core/theme/app_theme.dart';
 import 'features/onboarding/presentation/providers/onboarding_providers.dart';
 import 'features/onboarding/presentation/screens/onboarding_screen.dart';
 
-class MyMoodApp extends ConsumerWidget {
-  const MyMoodApp({super.key});
+class EventBJApp extends ConsumerWidget {
+  const EventBJApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
-        statusBarColor: Color(0xFF0D3B6E),
+        statusBarColor: AppColors.navy,
         statusBarIconBrightness: Brightness.light,
-        systemNavigationBarColor: Color(0xFFF5F4EF),
+        systemNavigationBarColor: AppColors.sand,
       ),
     );
 
     return MaterialApp.router(
-      title: 'MyMood',
+      title: 'EventBJ',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
       routerConfig: appRouter,
@@ -30,14 +30,14 @@ class MyMoodApp extends ConsumerWidget {
   }
 }
 
-class MyMoodRoot extends StatefulWidget {
-  const MyMoodRoot({super.key});
+class EventBJRoot extends StatefulWidget {
+  const EventBJRoot({super.key});
 
   @override
-  State<MyMoodRoot> createState() => _MyMoodRootState();
+  State<EventBJRoot> createState() => _EventBJRootState();
 }
 
-class _MyMoodRootState extends State<MyMoodRoot> {
+class _EventBJRootState extends State<EventBJRoot> {
   var _onboardingComplete = false;
 
   @override
@@ -46,7 +46,7 @@ class _MyMoodRootState extends State<MyMoodRoot> {
       child: Consumer(
         builder: (context, ref, _) {
           if (_onboardingComplete) {
-            return const MyMoodApp();
+            return const EventBJApp();
           }
 
           final onboardingAsync = ref.watch(onboardingCompletedProvider);
@@ -60,7 +60,7 @@ class _MyMoodRootState extends State<MyMoodRoot> {
                 ),
               ),
             ),
-            error: (_, __) => const MyMoodApp(),
+            error: (_, __) => const EventBJApp(),
             data: (completed) {
               if (completed) {
                 WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -78,7 +78,7 @@ class _MyMoodRootState extends State<MyMoodRoot> {
                 );
               }
               return MaterialApp(
-                title: 'MyMood',
+                title: 'EventBJ',
                 debugShowCheckedModeBanner: false,
                 theme: AppTheme.light,
                 home: OnboardingScreen(

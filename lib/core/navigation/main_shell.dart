@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../theme/app_colors.dart';
+import '../theme/app_text_styles.dart';
 import 'nav_icons.dart';
 
 class MainShell extends StatelessWidget {
@@ -109,11 +110,7 @@ class _NavItem extends StatelessWidget {
               const SizedBox(height: 4),
               Text(
                 label,
-                style: GoogleFonts.inter(
-                  fontSize: 11,
-                  fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
-                  color: selected ? AppColors.navy : AppColors.navInactive,
-                ),
+                style: selected ? AppTextStyles.bottomNavActive() : AppTextStyles.bottomNavInactive(),
               ),
             ],
           ),
