@@ -12,9 +12,10 @@ import '../../features/notifications/presentation/screens/notifications_screen.d
 import '../../features/organizer/presentation/screens/organizer_dashboard_screen.dart';
 import '../../features/organizer/presentation/screens/organizer_events_list_screen.dart';
 import '../../features/organizer/presentation/screens/organizer_event_form_screen.dart';
-import '../../features/organizer/presentation/screens/organizer_dashboard_screen.dart';
-import '../../features/organizer/presentation/screens/organizer_events_list_screen.dart';
 import '../../features/organizer/participants/presentation/screens/organizer_participants_screen.dart';
+import '../../features/payment/presentation/screens/checkout_screen.dart';
+import '../../features/payment/presentation/screens/payment_success_screen.dart';
+import '../../features/profile/presentation/screens/profile_screen.dart';
 import '../../features/tickets/presentation/screens/tickets_screen.dart';
 import '../../features/wallet/presentation/screens/wallet_screen.dart';
 import '../../features/wallet/presentation/screens/withdraw_screen.dart';
