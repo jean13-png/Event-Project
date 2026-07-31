@@ -4,6 +4,7 @@ import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:fl_chart/fl_chart.dart';
 
 import '../../../../core/navigation/app_router.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -164,6 +165,10 @@ class OrganizerDashboardScreen extends ConsumerWidget {
                             const SizedBox(height: 12),
                             _StatCard(icon: TablerIcons.wallet, label: 'Recettes', value: '${(stats['totalRevenue'] as double).toInt()} F', fullWidth: true),
                             const SizedBox(height: 20),
+                            Text('Courbe des ventes', style: GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.ink)),
+                            const SizedBox(height: 12),
+                            _SalesChart(sales: stats['recentSales'] as List<Map<String, dynamic>>? ?? const []),
+                            const SizedBox(height: 20),
                             Row(
                               children: [
                                 Expanded(
@@ -232,6 +237,64 @@ class OrganizerDashboardScreen extends ConsumerWidget {
         ),
       );
     }).toList();
+  }
+}
+
+class _SalesChart extends StatelessWidget {
+  const _SalesChart({required this.sales});
+
+  final List<Map<String, dynamic>> sales;
+
+  @override
+  Widget build(BuildContext context) {
+    if (sales.isEmpty) {
+      return Container(
+        height: 180,
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: AppColors.cardShadow,
+        ),
+        child: const Center(child: Text('Aucune vente pour le moment.', style: TextStyle(color: AppColors.muted))),
+      );
+    }
+
+    final spots = sales.map((s) {
+      final amount = (s['price'] is double ? s['price'] : (s['price'] as num?)?.toDouble() ?? 0.0) * ((s['quantity'] as int?) ?? 1);
+      return FlSpot(sales.indexOf(s).toDouble(), amount.toDouble());
+    }).toList();
+
+    return Container(
+      height: 180,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: AppColors.cardShadow,
+      ),
+      child: LineChart(
+        LineChartData(
+          gridData: const FlGridData(show: false),
+          titlesData: const FlTitlesData(show: false),
+          borderData: FlBorderData(show: false),
+          lineTouchData: LineTouchData(enabled: false),
+          minX: 0,
+          maxX: (sales.length - 1).clamp(0, 999).toDouble(),
+          minY: 0,
+          maxY: spots.map((s) => s.y).reduce((a, b) => a > b ? a : b).toDouble() * 1.2,
+          lineBarsData: [
+            LineChartBarData(
+              spots: spots,
+              isCurved: true,
+              color: AppColors.navy,
+              barWidth: 3,
+              dotData: const FlDotData(show: false),
+              belowBarData: BarAreaData(show: true, color: AppColors.navy.withValues(alpha: 0.08)),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 
