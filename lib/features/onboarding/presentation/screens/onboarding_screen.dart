@@ -90,8 +90,7 @@ class _BuildBottomControls extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               TextButton(
-                onPressed: () async {
-                  await Navigator.of(context).pushReplacementNamed('/');
+                onPressed: () {
                   onComplete?.call();
                 },
                 child: Text(
@@ -108,7 +107,6 @@ class _BuildBottomControls extends StatelessWidget {
                       curve: Curves.easeInOut,
                     );
                   } else {
-                    await Navigator.of(context).pushReplacementNamed('/');
                     onComplete?.call();
                   }
                 },
